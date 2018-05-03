@@ -1,8 +1,8 @@
 const Remeal = {}
 
 Remeal.init = () => {
-  // ignore notes
-  if( window.location.search.match( /(\?|\&)notes/gi ) !== null ) {
+  // ignore iframes
+  if(window.parent !== window) {
     return
   }
 
@@ -14,23 +14,21 @@ Remeal.init = () => {
 
   const socket = io(url)
 
-  const connect = () => {
-    socket.emit('connected', {
-      title: document.title,
-      url: document.location.href,
-      notes: Reveal.getSlideNotes()
-    })
-  }
+  const collectData = () => ({
+    title: document.title,
+    url: document.location.href,
+    notes: Reveal.getSlideNotes(),
+    total: Reveal.getTotalSlides(),
+    indices: Reveal.getIndices()
+  })
 
-  socket.on('connect', () => connect())
-  socket.on('requestreconnect', () => connect())
+  socket.on('connect', () => socket.emit('connected', collectData()))
+  socket.on('requestreconnect', () => socket.emit('connected', collectData()))
   socket.on('next', () => Reveal.next())
   socket.on('prev', () => Reveal.prev())
 
   Reveal.addEventListener('slidechanged', () => {
-    socket.emit('slidechanged', {
-      notes: Reveal.getSlideNotes()
-    })
+    socket.emit('slidechanged', collectData())
   })
 }
 
