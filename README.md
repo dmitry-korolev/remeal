@@ -2,9 +2,11 @@
 
 Simple remote control panel for reveal.js presentations based on socket.io.
 
-## Usage
+![Alt text](/example.png?raw=true "Screenshot")
+
+## Installation
 1. Clone this repo.
-2. Deploy it's content anywhere (e.g. `now`)
+2. Deploy its content anywhere (e.g. `now`)
 3. Add `socket.io` and `remeal.js` as dependencies to the `Reveal.initialize` config:
     ```js
     Reveal.initialize({
