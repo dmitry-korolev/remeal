@@ -10,6 +10,9 @@
     <style>
         :root {
             --padding: 1vh;
+            --header-height: 10vh;
+            --notes-height: 50vh;
+            --buttons-height: calc(100vh - var(--notes-height) - var(--header-height));
         }
 
         * {
@@ -24,22 +27,22 @@
         }
         header {
             position: relative;
-            height: 10vh;
+            height: var(--header-height);
             border-bottom: 2px solid #000;
         }
 
         .title {
-            line-height: 8vh;
+            line-height: calc(var(--header-height) - var(--padding) * 2);
             margin: 0;
             padding: var(--padding);
         }
 
         .connected {
             position: absolute;
-            top: 4vh;
-            right: 4vh;
-            height: 1vh;
-            width: 1vh;
+            top: calc((var(--header-height) - var(--padding)) / 2);
+            right: calc((var(--header-height) - var(--padding)) / 2);
+            height: var(--padding);
+            width: var(--padding);
 
             border-radius: 50%;
             background-color: #f00;
@@ -50,20 +53,21 @@
         }
 
         .notes {
-            height: 40vh;
+            height: var(--notes-height);
             border-bottom: 2px solid #000;
-            padding: var(--padding)
+            padding: var(--padding);
+            overflow: scroll;
         }
 
         .buttons {
-            height: 50vh;
+            height: var(--buttons-height);
             display: flex;
         }
 
         .button {
             height: 100%;
             width: 50%;
-            line-height: 50vh;
+            line-height: var(--buttons-height);
             text-align: center;
 
             font-size: 5vh;
