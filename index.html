@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Control panel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+
+    <style>
+        :root {
+            --padding: 1vh;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-size: 16px;
+            font-family: -apple-system, sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+        header {
+            position: relative;
+            height: 10vh;
+            border-bottom: 2px solid #000;
+        }
+
+        .title {
+            line-height: 8vh;
+            margin: 0;
+            padding: var(--padding);
+        }
+
+        .connected {
+            position: absolute;
+            top: 4vh;
+            right: 4vh;
+            height: 1vh;
+            width: 1vh;
+
+            border-radius: 50%;
+            background-color: #f00;
+        }
+
+        .connected.ok {
+            background-color: #0f0;
+        }
+
+        .notes {
+            height: 40vh;
+            border-bottom: 2px solid #000;
+            padding: var(--padding)
+        }
+
+        .buttons {
+            height: 50vh;
+            display: flex;
+        }
+
+        .button {
+            height: 100%;
+            width: 50%;
+            line-height: 50vh;
+            text-align: center;
+
+            font-size: 5vh;
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <header>
+            <h1 class="title" id="title">...</h1>
+            <span class="connected" id="connected"></span>
+        </header>
+        <div class="notes" id="notes"></div>
+        <div class="buttons">
+            <div class="button" id="prev">&larr;</div>
+            <div class="button" id="next">&rarr;</div>
+        </div>
+    </main>
+
+
+
+    <script>
+      const socket = io(document.location.href)
+      const indicator = document.getElementById('connected')
+      const heading = document.getElementById('title')
+      const speakerNotes = document.getElementById('notes')
+      const prevButton = document.getElementById('prev')
+      const nextButton = document.getElementById('next')
+
+      socket.on('connect', () => {
+        socket.emit('requestreconnect')
+      })
+
+      socket.on('connected', ({ title, notes }) => {
+        indicator.classList.add('ok')
+        heading.innerText = title
+        speakerNotes.innerHTML = notes
+
+        document.title = `${title}: control panel`
+      })
+
+      socket.on('slidechanged', ({ notes }) => {
+        speakerNotes.innerHTML = notes
+      })
+
+      prevButton.addEventListener('click', () => socket.emit('prev'))
+      nextButton.addEventListener('click', () => socket.emit('next'))
+    </script>
+</body>
+</html>

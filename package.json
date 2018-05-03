@@ -1,0 +1,16 @@
+{
+  "name": "remeal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Dmitry Korolev<dmitry@korolev.dk>",
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "^2.1.0",
+    "yargs": "^11.0.0"
+  }
+}
