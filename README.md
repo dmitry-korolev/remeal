@@ -20,4 +20,4 @@ Simple remote control panel for reveal.js presentations based on socket.io.
     ```
     
 4. Visit remeal deployment url.
-5. Open your presentation, enter remeal deployment url when prompted.
+5. Open your presentation, press `r` and enter remeal deployment url when prompted.

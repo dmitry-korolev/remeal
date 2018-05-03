@@ -1,18 +1,10 @@
-const Remeal = {}
-
-Remeal.init = () => {
+(function() {
   // ignore iframes
   if(window.parent !== window) {
     return
   }
 
-  const url = prompt('Enter socket.io server url')
-
-  if (!url) {
-    return
-  }
-
-  const socket = io(url)
+  let socket
 
   const collectData = () => ({
     title: document.title,
@@ -22,14 +14,49 @@ Remeal.init = () => {
     indices: Reveal.getIndices()
   })
 
-  socket.on('connect', () => socket.emit('connected', collectData()))
-  socket.on('requestreconnect', () => socket.emit('connected', collectData()))
-  socket.on('next', () => Reveal.next())
-  socket.on('prev', () => Reveal.prev())
+  const connect = () => {
+    if (socket) {
+      return
+    }
 
-  Reveal.addEventListener('slidechanged', () => {
-    socket.emit('slidechanged', collectData())
+    const url = prompt('Enter socket.io server url')
+
+    if (!url) {
+      return
+    }
+
+    socket = io(url)
+
+
+    socket.on('connect', () => socket.emit('connected', collectData()))
+    socket.on('requestreconnect', () => socket.emit('connected', collectData()))
+    socket.on('next', () => Reveal.next())
+    socket.on('prev', () => Reveal.prev())
+
+    Reveal.addEventListener('slidechanged', () => {
+      socket.emit('slidechanged', collectData())
+    })
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (
+      document.querySelector(':focus') !== null
+      || event.shiftKey
+      || event.altKey
+      || event.ctrlKey
+      || event.metaKey
+    ) {
+      return
+    }
+
+    // Disregard the event if keyboard is disabled
+    if (Reveal.getConfig().keyboard === false) {
+      return
+    }
+
+    if (event.key === 'c') {
+      event.preventDefault()
+      connect()
+    }
   })
-}
-
-Remeal.init()
+})()
