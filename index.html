@@ -10,9 +10,10 @@
     <style>
         :root {
             --padding: 1vh;
-            --header-height: 10vh;
-            --notes-height: 50vh;
-            --buttons-height: calc(100vh - var(--notes-height) - var(--header-height));
+            --header-height: 6vh;
+            --notes-height: 30vh;
+            --frame-height: 30vh;
+            --buttons-height: calc(100vh - var(--notes-height) - var(--header-height) - var(--frame-height));
         }
 
         * {
@@ -29,9 +30,14 @@
             position: relative;
             height: var(--header-height);
             border-bottom: 2px solid #000;
+            display: flex;
         }
 
-        .title {
+        h1 {
+            font-size: 1em;
+        }
+
+        .title, .timer {
             line-height: calc(var(--header-height) - var(--padding) * 2);
             margin: 0;
             padding: var(--padding);
@@ -59,6 +65,11 @@
             overflow: scroll;
         }
 
+        .frame {
+            height: var(--frame-height);
+            border-bottom: 2px solid #000;
+        }
+
         .buttons {
             height: var(--buttons-height);
             display: flex;
@@ -78,8 +89,10 @@
     <main class="app">
         <header>
             <h1 class="title" id="title">...</h1>
+            <div class="timer" id="timer">00:00</div>
             <span class="connected" id="connected"></span>
         </header>
+        <div class="frame" id="frame"></div>
         <div class="notes" id="notes"></div>
         <div class="buttons">
             <div class="button" id="prev">&larr;</div>
@@ -87,34 +100,73 @@
         </div>
     </main>
 
-
-
     <script>
       const socket = io(document.location.href)
+      let frame
+      let timerId
+
+      // DOM nodes
       const indicator = document.getElementById('connected')
       const heading = document.getElementById('title')
       const speakerNotes = document.getElementById('notes')
       const prevButton = document.getElementById('prev')
       const nextButton = document.getElementById('next')
+      const presentationFrame = document.getElementById('frame')
+      const timer = document.getElementById('timer')
+
+      const setUpIframe = (url) => {
+        frame && frame.remove()
+        frame = document.createElement('iframe')
+        frame.setAttribute('height', presentationFrame.offsetHeight)
+        frame.setAttribute('width', presentationFrame.offsetWidth)
+        frame.setAttribute('src', url)
+
+        presentationFrame.appendChild(frame)
+      }
+
+      const update = ({ title, notes, total, indices }) => {
+        const { h, v, f } = indices
+        speakerNotes.innerHTML = notes
+        heading.innerText = `${title}: ${indices.h + 1}/${total}`
+
+        frame && frame.contentWindow.postMessage( JSON.stringify({ method: 'slide', args: [h, v, f] }), '*' )
+      }
+
+      const prepend = (value) => {
+        return value.toString().length < 2 ? `0${value}` : value
+      }
+
+      const startTimer = () => {
+        clearInterval(timerId)
+        const time = new Date()
+        timer.innerText = '00:00'
+
+        timerId = setInterval(() => {
+          const seconds = Math.round((new Date() - time) / 1000)
+
+          timer.innerText = `${prepend(Math.floor(seconds / 60))}:${prepend(seconds % 60)}`
+        }, 1000)
+      }
 
       socket.on('connect', () => {
         socket.emit('requestreconnect')
       })
 
-      socket.on('connected', ({ title, notes }) => {
+      socket.on('connected', ({ title, url, notes, total, indices,  }) => {
         indicator.classList.add('ok')
-        heading.innerText = title
-        speakerNotes.innerHTML = notes
 
-        document.title = `${title}: control panel`
+        setUpIframe(url)
+        update({ title, notes, total, indices })
+        startTimer()
       })
 
-      socket.on('slidechanged', ({ notes }) => {
-        speakerNotes.innerHTML = notes
+      socket.on('slidechanged', ({ title, notes, total, indices }) => {
+        update({ title, notes, total, indices })
       })
 
       prevButton.addEventListener('click', () => socket.emit('prev'))
       nextButton.addEventListener('click', () => socket.emit('next'))
+      timer.addEventListener('click', () => startTimer())
     </script>
 </body>
 </html>
