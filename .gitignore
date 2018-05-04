@@ -6,5 +6,6 @@
 /public
 /plugin
 /dist
+/server
 /index.js
 /index.map
