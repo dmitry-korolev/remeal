@@ -11,7 +11,7 @@
     url: document.location.href,
     notes: Reveal.getSlideNotes(),
     total: Reveal.getTotalSlides(),
-    indices: Reveal.getIndices()
+    state: Reveal.getState()
   })
 
   const connect = () => {
@@ -27,15 +27,20 @@
 
     socket = io(url)
 
-
-    socket.on('connect', () => socket.emit('connected', collectData()))
-    socket.on('requestreconnect', () => socket.emit('connected', collectData()))
+    socket.on('connect', () => socket.emit('init', collectData()))
+    socket.on('requestreconnect', (data) => socket.emit('init', collectData()))
     socket.on('next', () => Reveal.next())
     socket.on('prev', () => Reveal.prev())
+    socket.on('pause', () => Reveal.togglePause())
+    socket.on('overview', () => Reveal.toggleOverview())
 
-    Reveal.addEventListener('slidechanged', () => {
-      socket.emit('slidechanged', collectData())
-    })
+    const sendState = () => socket.emit('setstate', collectData())
+
+    Reveal.addEventListener('slidechanged', sendState)
+    Reveal.addEventListener('paused', sendState)
+    Reveal.addEventListener('resumed', sendState)
+    Reveal.addEventListener('overviewhidden', sendState)
+    Reveal.addEventListener('overviewshown', sendState)
   }
 
   document.addEventListener('keydown', (event) => {
@@ -54,7 +59,7 @@
       return
     }
 
-    if (event.key === 'c') {
+    if (event.key === 'r') {
       event.preventDefault()
       connect()
     }

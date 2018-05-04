@@ -7,6 +7,8 @@
     <title>Control panel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     <style>
         :root {
             --padding: 1vh;
@@ -26,6 +28,7 @@
             padding: 0;
             margin: 0;
         }
+
         header {
             position: relative;
             height: var(--header-height);
@@ -37,7 +40,7 @@
             font-size: 1em;
         }
 
-        .title, .timer {
+        .title, .count, .timer {
             line-height: calc(var(--header-height) - var(--padding) * 2);
             margin: 0;
             padding: var(--padding);
@@ -60,43 +63,67 @@
 
         .notes {
             height: var(--notes-height);
-            border-bottom: 2px solid #000;
+            border-bottom: 1px solid #000;
             padding: var(--padding);
             overflow: scroll;
         }
 
         .frame {
             height: var(--frame-height);
-            border-bottom: 2px solid #000;
         }
 
-        .buttons {
+        .controls {
             height: var(--buttons-height);
             display: flex;
+            align-content: stretch;
+            align-items: stretch;
+        }
+
+        .column.left {
+            width: 30%;
+        }
+
+        .column.right {
+            width: 70%;
         }
 
         .button {
-            height: 100%;
-            width: 50%;
-            line-height: var(--buttons-height);
             text-align: center;
-
+            border: 1px solid #000;
             font-size: 5vh;
+        }
+
+        .button.prev, .button.pause, .button.overview {
+            --height: calc(var(--buttons-height) / 3);
+            height: var(--height);
+            line-height: var(--height);
+        }
+
+        .button.next {
+            height: var(--buttons-height);
+            line-height: var(--buttons-height);
         }
     </style>
 </head>
 <body>
     <main class="app">
         <header>
-            <h1 class="title" id="title">...</h1>
+            <h1 class="title" id="title">&hellip;</h1>
+            <div class="count" id="count"></div>
             <div class="timer" id="timer">00:00</div>
             <span class="connected" id="connected"></span>
         </header>
         <div class="frame" id="frame"></div>
         <div class="notes" id="notes"></div>
-        <div class="buttons">
-            <div class="button" id="prev">&larr;</div>
-            <div class="button" id="next">&rarr;</div>
+        <div class="controls">
+            <div class="column left">
+                <div class="button prev" id="prev"><i class="material-icons">navigate_before</i></div>
+                <div class="button pause" id="pause"><i class="material-icons">pause</i></div>
+                <div class="button overview" id="overview"><i class="material-icons">view_module</i></div>
+            </div>
+            <div class="column right">
+                <div class="button next" id="next"><i class="material-icons">navigate_next</i></div>
+            </div>
         </div>
     </main>
 
@@ -106,17 +133,30 @@
       let timerId
 
       // DOM nodes
-      const indicator = document.getElementById('connected')
+      // Header
       const heading = document.getElementById('title')
+      const count = document.getElementById('count')
+      const timer = document.getElementById('timer')
+      const indicator = document.getElementById('connected')
+
+      // Body
+      const presentationFrame = document.getElementById('frame')
       const speakerNotes = document.getElementById('notes')
+
+      // Controls
       const prevButton = document.getElementById('prev')
       const nextButton = document.getElementById('next')
-      const presentationFrame = document.getElementById('frame')
-      const timer = document.getElementById('timer')
+      const pauseButton = document.getElementById('pause')
+      const overviewButton = document.getElementById('overview')
+
+      // HTML
+      const playCode = '<i class="material-icons">play_arrow</i>'
+      const pauseCode = '<i class="material-icons">pause</i>'
 
       const setUpIframe = (url) => {
         frame && frame.remove()
         frame = document.createElement('iframe')
+        frame.setAttribute('border', '0')
         frame.setAttribute('height', presentationFrame.offsetHeight)
         frame.setAttribute('width', presentationFrame.offsetWidth)
         frame.setAttribute('src', url)
@@ -124,12 +164,14 @@
         presentationFrame.appendChild(frame)
       }
 
-      const update = ({ title, notes, total, indices }) => {
-        const { h, v, f } = indices
+      const update = ({ title, notes, total, state }) => {
+        const { indexh } = state
         speakerNotes.innerHTML = notes
-        heading.innerText = `${title}: ${indices.h + 1}/${total}`
+        count.innerText = `${indexh + 1}/${total}`
 
-        frame && frame.contentWindow.postMessage( JSON.stringify({ method: 'slide', args: [h, v, f] }), '*' )
+        pauseButton.innerHTML = state.paused ? playCode : pauseCode
+
+        frame && frame.contentWindow.postMessage( JSON.stringify({ method: 'setState', args: [state] }), '*' )
       }
 
       const prepend = (value) => {
@@ -139,33 +181,36 @@
       const startTimer = () => {
         clearInterval(timerId)
         const time = new Date()
-        timer.innerText = '00:00'
+        timer.innerHTML = '00:00'
 
         timerId = setInterval(() => {
           const seconds = Math.round((new Date() - time) / 1000)
 
-          timer.innerText = `${prepend(Math.floor(seconds / 60))}:${prepend(seconds % 60)}`
+          timer.innerHTML = `${prepend(Math.floor(seconds / 60))}:${prepend(seconds % 60)}`
         }, 1000)
       }
 
-      socket.on('connect', () => {
-        socket.emit('requestreconnect')
-      })
+      const emit = (command) => socket.emit('remote', { command })
 
-      socket.on('connected', ({ title, url, notes, total, indices,  }) => {
+      socket.on('connect', () => emit('requestreconnect'))
+
+      socket.on('init', ({ title, url, notes, total, state }) => {
         indicator.classList.add('ok')
+        heading.innerText = title
 
         setUpIframe(url)
-        update({ title, notes, total, indices })
+        update({ notes, total, state })
         startTimer()
       })
 
-      socket.on('slidechanged', ({ title, notes, total, indices }) => {
-        update({ title, notes, total, indices })
+      socket.on('setstate', ({ notes, total, state }) => {
+        update({ notes, total, state })
       })
 
-      prevButton.addEventListener('click', () => socket.emit('prev'))
-      nextButton.addEventListener('click', () => socket.emit('next'))
+      prevButton.addEventListener('click', () => emit('prev'))
+      nextButton.addEventListener('click', () => emit('next'))
+      pauseButton.addEventListener('click', () => emit('pause'))
+      overviewButton.addEventListener('click', () => emit('overview'))
       timer.addEventListener('click', () => startTimer())
     </script>
 </body>

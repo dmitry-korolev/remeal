@@ -19,24 +19,18 @@ const argv = require('yargs').argv
 app.listen(argv.port || 80)
 
 io.on('connection', (socket) => {
-  socket.on('prev', () => {
-    io.emit('prev')
+  // From remote
+  socket.on('remote', ({ command }) => {
+    io.emit(command)
   })
 
-  socket.on('next', () => {
-    io.emit('next')
+  // From presentation
+  socket.on('init', data => {
+    io.emit('init', data)
   })
 
-  socket.on('requestreconnect', () => {
-    io.emit('requestreconnect')
-  })
-
-  socket.on('connected', data => {
-    io.emit('connected', data)
-  })
-
-  socket.on('slidechanged', data => {
-    io.emit('slidechanged', data)
+  socket.on('setstate', data => {
+    io.emit('setstate', data)
   })
 })
 
