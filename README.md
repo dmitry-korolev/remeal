@@ -5,19 +5,18 @@ Simple remote control panel for reveal.js presentations based on socket.io.
 ![Alt text](/example.png?raw=true "Screenshot")
 
 ## Installation
-1. Clone this repo.
-2. Deploy its content anywhere (e.g. `now`)
-3. Add `socket.io` and `remeal.js` as dependencies to the `Reveal.initialize` config:
-    ```js
-    Reveal.initialize({
-      ...otherConfigOptions,
-      dependencies: [
-        ...otherDependencies,
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js' },
-        { src: 'https://raw.githubusercontent.com/dmitry-korolev/remeal/master/plugin/remeal.js', async: true }
-      ]
-    })
-    ```
-    
-4. Visit remeal deployment url.
-5. Open your presentation, press `r` and enter remeal deployment url when prompted.
+1. Clone this repo and deploy anywhere. Don't forget to `npm run start` it.
+2. There are two ways to connect to the control panel:
+    1. Build remeal locally (`npm run build`), copy `plugin/remeal.js` to your presentation and add it as a dependency:
+        ```js
+        Reveal.initialize({
+          ...otherConfigOptions,
+          dependencies: [
+            ...otherDependencies,
+            { src: REMEAL_PLUGIN_URL_GOES_HERE, async: true, callback: () => initRemeal() }
+          ]
+        })
+        ```
+        Then open your presentation and press `r` to connect to the remote control panel.
+        
+    2. OR visit remeal deployment and drag the red dot to the bookmarks panel. Then open your presentation and press the bookmarklet. Presentation will be connected to the control panel automatically.

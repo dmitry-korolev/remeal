@@ -5,11 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "build": "npm run build:client && npm run build:plugin && npm run build:server",
+    "build:plugin": "parcel build src/plugins/remeal.js -d ./plugin",
+    "build:client": "parcel build src/control/index.html -d ./public",
+    "build:server": "parcel build src/server/index.js -d ./ --target=node",
+    "start": "npm run build && node index.js"
   },
   "author": "Dmitry Korolev<dmitry@korolev.dk>",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.16.3",
+    "parcel-bundler": "^1.8.1",
     "socket.io": "^2.1.0",
     "yargs": "^11.0.0"
   }

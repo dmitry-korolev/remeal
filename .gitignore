@@ -1,2 +1,10 @@
 /node_modules
 .idea
+.cache
+
+# generated files
+/public
+/plugin
+/dist
+/index.js
+/index.map
