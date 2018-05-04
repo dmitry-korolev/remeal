@@ -19,4 +19,4 @@ Simple remote control panel for reveal.js presentations based on socket.io.
         ```
         Then open your presentation and press `r` to connect to the remote control panel.
         
-    2. OR visit remeal deployment and drag the red dot to the bookmarks panel. Then open your presentation and press the bookmarklet. Presentation will be connected to the control panel automatically.
+    2. OR visit remeal deployment and drag the huge `Remeal` link to the bookmarks panel. Then open your presentation and press the bookmarklet. Presentation will be connected to the control panel automatically.

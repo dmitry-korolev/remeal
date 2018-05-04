@@ -24,6 +24,7 @@ const init = (socket) => {
   const timer = document.getElementById('timer')
 
   // Body
+  const bookmarklet = document.getElementById('bookmarklet')
   const presentationFrame = document.getElementById('frame')
   const speakerNotes = document.getElementById('notes')
 
@@ -52,14 +53,13 @@ const init = (socket) => {
     postState(state)
   }
 
-  indicator.setAttribute('href', bookmarkletUrl(document.location.origin))
-
   socket.on(CONNECT_EVENT, () => socket.emit(REQUEST_RECONNECT_EVENT))
 
   socket.on(SETSTATE_EVENT, ({ notes, total, state }) => {
     update({ notes, total, state })
   })
 
+  bookmarklet.setAttribute('href', bookmarkletUrl(document.location.origin))
   prevButton.addEventListener('click', () => socket.emit(PREV_EVENT))
   nextButton.addEventListener('click', () => socket.emit(NEXT_EVENT))
   pauseButton.addEventListener('click', () => socket.emit(PAUSE_EVENT))

@@ -1,6 +1,8 @@
 let frame
 
 export const setupIframe = (url, presentationFrame) => {
+  presentationFrame.innerHTML = ''
+
   frame && frame.remove()
   frame = document.createElement('iframe')
   frame.setAttribute('border', '0')
