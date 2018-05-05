@@ -31,8 +31,11 @@ const index = app.listen(argv.port || 80, () => {
   log(`Server is running at ${index.address().port}`)
 })
 
+let hasRemote = false
+
 io.on(CONNECTION_EVENT, (socket) => {
   if (socket.handshake.query.type === PRESENTATION) {
+    log('Presentation connected')
     PRESENTATION_EVENTS.forEach((event) =>
       socket.on(event, (data) => {
         log('Event from presentation:', event, data)
@@ -41,16 +44,27 @@ io.on(CONNECTION_EVENT, (socket) => {
     )
 
     socket.on(DISCONNECT_EVENT, () => {
+      log('Presentation disconnected')
       socket.broadcast.emit(PRESENTATION_DISCONNECTED_EVENT)
     })
   }
 
-  if (socket.handshake.query.type === REMOTE) {
+  if (socket.handshake.query.type === REMOTE && !hasRemote) {
+    log('Remote connected')
+
+    // Ignore other remote controls
+    hasRemote = true
+
     REMOTE_EVENTS.forEach((event) =>
       socket.on(event, (data) => {
         log('Event from remote:', event, data)
         socket.broadcast.emit(event, data)
       })
     )
+
+    socket.on(DISCONNECT_EVENT, () => {
+      hasRemote = false
+      log('Remote disconnected')
+    })
   }
 })
