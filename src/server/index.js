@@ -3,7 +3,15 @@ import socket from 'socket.io'
 import { argv } from 'yargs'
 import { Server } from 'http'
 
-import { CONNECTION_EVENT, PRESENTATION_EVENTS, REMOTE_EVENTS } from '../constants'
+import {
+  CONNECTION_EVENT,
+  DISCONNECT_EVENT,
+  PRESENTATION,
+  PRESENTATION_DISCONNECTED_EVENT,
+  PRESENTATION_EVENTS,
+  REMOTE,
+  REMOTE_EVENTS
+} from '../constants'
 
 const app = Server(
   express()
@@ -20,17 +28,29 @@ const log = (...args) => {
 }
 
 const index = app.listen(argv.port || 80, () => {
-  log(`Server is running at ${index.address().port}`, )
+  log(`Server is running at ${index.address().port}`)
 })
 
 io.on(CONNECTION_EVENT, (socket) => {
-  REMOTE_EVENTS.forEach(event => socket.on(event, data => {
-    log('Event from remote:', event, data)
-    io.emit(event, data)
-  }))
+  if (socket.handshake.query.type === PRESENTATION) {
+    PRESENTATION_EVENTS.forEach((event) =>
+      socket.on(event, (data) => {
+        log('Event from presentation:', event, data)
+        socket.broadcast.emit(event, data)
+      })
+    )
 
-  PRESENTATION_EVENTS.forEach(event => socket.on(event, data => {
-    log('Event from presentation:', event, data)
-    io.emit(event, data)
-  }))
+    socket.on(DISCONNECT_EVENT, () => {
+      socket.broadcast.emit(PRESENTATION_DISCONNECTED_EVENT)
+    })
+  }
+
+  if (socket.handshake.query.type === REMOTE) {
+    REMOTE_EVENTS.forEach((event) =>
+      socket.on(event, (data) => {
+        log('Event from remote:', event, data)
+        socket.broadcast.emit(event, data)
+      })
+    )
+  }
 })

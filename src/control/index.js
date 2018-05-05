@@ -1,15 +1,17 @@
-import { startTimer } from './timer'
 import { postState, setupIframe } from './setupIframe'
 import {
   CONNECT_EVENT,
-  NEXT_EVENT, OVERVIEW_EVENT,
+  NEXT_EVENT,
+  OVERVIEW_EVENT,
   PAUSE_EVENT,
   PREV_EVENT,
+  REMOTE,
   REQUEST_RECONNECT_EVENT,
   SETSTATE_EVENT
 } from '../constants'
 import { loadScript } from '../loadScript'
 import { bookmarkletUrl } from './bookmarkletUrl'
+import { Timer } from './timer'
 
 // HTML
 const playCode = '<i class="material-icons">play_arrow</i>'
@@ -34,13 +36,14 @@ const init = (socket) => {
   const pauseButton = document.getElementById('pause')
   const overviewButton = document.getElementById('overview')
 
+  const timerInstance = new Timer((time) => (timer.innerHTML = time))
+
   socket.on('init', ({ title, url, notes, total, state }) => {
     indicator.classList.add('ok')
     heading.innerText = title
 
     setupIframe(url, presentationFrame)
     update({ notes, total, state })
-    startTimer(timer)
   })
 
   const update = ({ title, notes, total, state }) => {
@@ -48,6 +51,7 @@ const init = (socket) => {
     speakerNotes.innerHTML = notes
     count.innerText = `${indexh + 1}/${total}`
 
+    state.paused ? timerInstance.pause() : timerInstance.resume()
     pauseButton.innerHTML = state.paused ? playCode : pauseCode
 
     postState(state)
@@ -64,9 +68,15 @@ const init = (socket) => {
   nextButton.addEventListener('click', () => socket.emit(NEXT_EVENT))
   pauseButton.addEventListener('click', () => socket.emit(PAUSE_EVENT))
   overviewButton.addEventListener('click', () => socket.emit(OVERVIEW_EVENT))
-  timer.addEventListener('click', () => startTimer(timer))
+  timer.addEventListener('click', () => timerInstance.start())
 }
 
-loadScript(document.location.origin +  '/socket.io/socket.io.js')
-  .then(() => init(io(document.location.origin)))
-  .catch(error => console.log(error))
+loadScript(document.location.origin + '/socket.io/socket.io.js')
+  .then(() =>
+    init(
+      io(document.location.origin, {
+        query: { type: REMOTE }
+      })
+    )
+  )
+  .catch((error) => console.log(error))

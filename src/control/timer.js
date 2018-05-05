@@ -1,17 +1,51 @@
-let timerId = 0
-
 const prepend = (value) => {
   return value.toString().length < 2 ? `0${value}` : value
 }
 
-export const startTimer = (timer) => {
-  clearInterval(timerId)
-  const time = new Date()
-  timer.innerHTML = '00:00'
+export class Timer {
+  constructor(cb) {
+    this.cb = cb
+    this.cb('00:00')
 
-  timerId = setInterval(() => {
-    const seconds = Math.round((new Date() - time) / 1000)
+    this.intervalId = 0
+    this.seconds = 0
+    this.state = 'PENDING'
+  }
 
-    timer.innerHTML = `${prepend(Math.floor(seconds / 60))}:${prepend(seconds % 60)}`
-  }, 1000)
+  start(time = +new Date()) {
+    clearInterval(this.intervalId)
+    this.state = 'RUNNING'
+    this.startTime = time
+    this.intervalId = setInterval(() => this.tick(), 1000)
+  }
+
+  pause() {
+    if (this.state === 'PAUSED') {
+      return
+    }
+
+    clearInterval(this.intervalId)
+    this.state = 'PAUSED'
+  }
+
+  resume() {
+    if (this.state === 'RUNNING') {
+      return
+    }
+
+    this.start(this.startTime)
+  }
+
+  stop() {
+    clearInterval(this.intervalId)
+    this.state = 'PENDING'
+    this.cb('00:00')
+  }
+
+  tick() {
+    this.seconds += 1
+    this.cb(
+      `${prepend(Math.floor(this.seconds / 60))}:${prepend(this.seconds % 60)}`
+    )
+  }
 }

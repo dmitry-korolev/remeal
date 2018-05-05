@@ -14,5 +14,9 @@ export const setupIframe = (url, presentationFrame) => {
 }
 
 export const postState = (state) => {
-  frame && frame.contentWindow.postMessage( JSON.stringify({ method: 'setState', args: [state] }), '*' )
+  frame &&
+    frame.contentWindow.postMessage(
+      JSON.stringify({ method: 'setState', args: [state] }),
+      '*'
+    )
 }
