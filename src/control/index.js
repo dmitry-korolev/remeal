@@ -13,7 +13,8 @@ import {
 } from '../constants'
 import { loadScript } from '../loadScript'
 import { bookmarkletUrl } from './bookmarkletUrl'
-import { Timer } from './timer'
+import { timer } from './timer'
+import { indicator, INDICATOR_STATES } from './indicator'
 
 // HTML
 const playCode = '<i class="material-icons">play_arrow</i>'
@@ -38,10 +39,41 @@ const init = (socket) => {
   const $pauseButton = document.getElementById('pause')
   const $overviewButton = document.getElementById('overview')
 
-  const timerInstance = new Timer((time) => ($timer.innerHTML = time))
+  // Setup timer
+  const timerInstance = timer((time) => ($timer.innerHTML = time))
+  $timer.addEventListener('click', () => timerInstance.start())
+
+  // Setup indicator
+  const indicatorInstance = indicator((state) => {
+    switch (state) {
+      case INDICATOR_STATES.DISCONNECTED:
+        $indicator.classList.add('disconnected')
+        $indicator.classList.remove('connected')
+        $indicator.classList.remove('pending')
+        break
+
+      case INDICATOR_STATES.CONNECTED:
+        $indicator.classList.remove('disconnected')
+        $indicator.classList.add('connected')
+        $indicator.classList.remove('pending')
+        break
+
+      case INDICATOR_STATES.PENDING:
+        $indicator.classList.remove('disconnected')
+        $indicator.classList.remove('connected')
+        $indicator.classList.add('pending')
+        break
+    }
+  })
+
+  const emit = (event) => {
+    socket.emit(event)
+    indicatorInstance.startPending()
+  }
 
   const update = ({ title, notes, total, state }) => {
     const { indexh } = state
+    indicatorInstance.connect()
     $speakerNotes.innerHTML = notes
     $count.innerText = `${indexh + 1}/${total}`
 
@@ -62,20 +94,19 @@ const init = (socket) => {
     setupIframe(url, $presentationFrame)
     update({ notes, total, state })
   })
-  socket.on(CONNECT_EVENT, () => socket.emit(REQUEST_RECONNECT_EVENT))
+  socket.on(CONNECT_EVENT, () => emit(REQUEST_RECONNECT_EVENT))
   socket.on(PRESENTATION_DISCONNECTED_EVENT, () =>
-    $indicator.classList.remove('ok')
+    indicatorInstance.disconnect()
   )
   socket.on(SETSTATE_EVENT, ({ notes, total, state }) => {
     update({ notes, total, state })
   })
 
   // Subscribe on click events
-  $prevButton.addEventListener('click', () => socket.emit(PREV_EVENT))
-  $nextButton.addEventListener('click', () => socket.emit(NEXT_EVENT))
-  $pauseButton.addEventListener('click', () => socket.emit(PAUSE_EVENT))
-  $overviewButton.addEventListener('click', () => socket.emit(OVERVIEW_EVENT))
-  $timer.addEventListener('click', () => timerInstance.start())
+  $prevButton.addEventListener('click', () => emit(PREV_EVENT))
+  $nextButton.addEventListener('click', () => emit(NEXT_EVENT))
+  $pauseButton.addEventListener('click', () => emit(PAUSE_EVENT))
+  $overviewButton.addEventListener('click', () => emit(OVERVIEW_EVENT))
 }
 
 loadScript(document.location.origin + '/socket.io/socket.io.js')

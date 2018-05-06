@@ -2,50 +2,59 @@ const prepend = (value) => {
   return value.toString().length < 2 ? `0${value}` : value
 }
 
-export class Timer {
-  constructor(cb) {
-    this.cb = cb
-    this.cb('00:00')
+const format = (seconds) => {
+  return `${prepend(Math.floor(seconds / 60))}:${prepend(seconds % 60)}`
+}
 
-    this.intervalId = 0
-    this.seconds = 0
-    this.state = 'PENDING'
+export const timer = (cb) => {
+  let intervalId = -1
+  let seconds = 0
+
+  cb(format(seconds))
+
+  const tick = () => {
+    seconds += 1
+    cb(format(seconds))
   }
 
-  start(time = +new Date()) {
-    clearInterval(this.intervalId)
-    this.state = 'RUNNING'
-    this.startTime = time
-    this.intervalId = setInterval(() => this.tick(), 1000)
+  const isRunning = () => {
+    return intervalId >= 0
   }
 
-  pause() {
-    if (this.state === 'PAUSED') {
+  const start = () => {
+    intervalId = setInterval(() => tick(), 1000)
+  }
+
+  const pause = () => {
+    if (!isRunning()) {
+      return
+    }
+    clearInterval(intervalId)
+    intervalId = -1
+  }
+
+  const resume = () => {
+    if (isRunning()) {
       return
     }
 
-    clearInterval(this.intervalId)
-    this.state = 'PAUSED'
+    start()
   }
 
-  resume() {
-    if (this.state === 'RUNNING') {
-      return
+  const stop = () => {
+    if (isRunning()) {
+      clearInterval(intervalId)
+      intervalId = -1
     }
 
-    this.start(this.startTime)
+    seconds = 0
+    cb(format(seconds))
   }
 
-  stop() {
-    clearInterval(this.intervalId)
-    this.state = 'PENDING'
-    this.cb('00:00')
-  }
-
-  tick() {
-    this.seconds += 1
-    this.cb(
-      `${prepend(Math.floor(this.seconds / 60))}:${prepend(this.seconds % 60)}`
-    )
+  return {
+    start,
+    pause,
+    resume,
+    stop
   }
 }
