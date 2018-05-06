@@ -27,8 +27,12 @@ header {
     display: flex;
 }
 
-h1 {
+.title {
     font-size: 1em;
+    max-width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .title, .count, .timer {
