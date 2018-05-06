@@ -31,6 +31,3 @@ The installation process includes two simple steps:
         })
         ```
         Then open your presentation and press `r` to connect to the remote control panel.
-
-## Todo
-Add support for shower.js.
