@@ -1,6 +1,6 @@
 # Remeal
-
 Simple remote control panel for reveal.js presentations based on socket.io. Features:
+
 1. Title of the talk. For busy people!
 2. Timer. Click on it to restart.
 3. Beautiful connection indicator. 
@@ -42,3 +42,6 @@ The installation process includes two simple steps:
 
 ### Settings
 ![Settings](/screenshots/settings.png?raw=true "Settings panel")
+
+## License
+MIT
