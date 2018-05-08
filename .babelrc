@@ -1,0 +1,28 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 1 Chrome version"]
+      }
+    }]
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-class-properties",
+    "emotion",
+    ["transform-imports", {
+      "rxjs/operator": {
+        "transform": "rxjs/operator/${member}",
+        "preventFullImport": true,
+        "camelCase": true,
+        "skipDefaultConversion": true
+      },
+      "rxjs/observable": {
+        "transform": "rxjs/observable/${member}",
+        "camelCase": true,
+        "preventFullImport": true,
+        "skipDefaultConversion": true
+      }
+    }]
+  ]
+}

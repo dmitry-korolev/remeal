@@ -6,20 +6,38 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:client && npm run build:plugin && npm run build:server",
-    "build:plugin": "parcel build src/plugins/remeal.js -d plugin",
-    "build:client": "parcel build src/control/index.html -d public",
-    "build:server": "parcel build src/server/index.js -d server --target=node",
+    "build:plugin": "rimraf plugin && parcel build src/plugins/remeal.js -d plugin",
+    "build:client": "rimraf public && parcel build src/control/index.html -d public",
+    "build:server": "rimraf server && parcel build src/server/index.js -d server --target=node",
     "start": "node server/index.js"
   },
   "author": "Dmitry Korolev<dmitry@korolev.dk>",
   "license": "MIT",
   "dependencies": {
+    "emotion": "^9.1.3",
     "express": "^4.16.3",
-    "parcel-bundler": "^1.8.1",
+    "fbjs": "^0.8.16",
+    "preact": "^8.2.9",
+    "preact-emotion": "^9.1.3",
+    "prop-types": "^15.6.1",
+    "redux": "^4.0.0",
+    "reselect": "^3.0.1",
+    "rxjs": "^5.5.10",
+    "slim-js": "^3.2.9",
     "socket.io": "^2.1.0",
-    "yargs": "^11.0.0"
+    "socket.io-client": "^2.1.0",
+    "stapp": "^1.1.0"
   },
   "devDependencies": {
-    "prettier": "1.12.1"
+    "babel-plugin-emotion": "^9.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-imports": "^1.5.0",
+    "parcel-bundler": "^1.8.1",
+    "postcss": "^6.0.22",
+    "postcss-cssnext": "^3.1.0",
+    "prettier": "1.12.1",
+    "rimraf": "^2.6.2",
+    "yargs": "^11.0.0"
   }
 }

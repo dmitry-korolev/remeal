@@ -5,31 +5,9 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Control panel</title>
-    <link href="./index.css" rel="stylesheet">
 </head>
-<body>
-    <main class="app">
-        <header>
-            <h1 class="title" id="title">&hellip;</h1>
-            <div class="count" id="count"></div>
-            <div class="timer" id="timer">00:00</div>
-            <span class="indicator disconnected" id="connected"></span>
-        </header>
-        <div class="frame" id="frame">
-            <a class="bookmarklet" id="bookmarklet" title="Remeal bookmarklet">Remeal</a>
-        </div>
-        <div class="notes" id="notes"></div>
-        <div class="controls">
-            <div class="column left">
-                <div class="button prev" id="prev"><i class="material-icons">navigate_before</i></div>
-                <div class="button pause" id="pause"><i class="material-icons">pause</i></div>
-                <div class="button overview" id="overview"><i class="material-icons">view_module</i></div>
-            </div>
-            <div class="column right">
-                <div class="button next" id="next"><i class="material-icons">navigate_next</i></div>
-            </div>
-        </div>
-    </main>
+<body class="theme--dark">
+    <main id="app"/>
     <script src="./index.js"></script>
 </body>
 </html>
