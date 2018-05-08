@@ -14,10 +14,6 @@ Simple remote control panel for reveal.js presentations based on socket.io. Feat
 7. Customizable panel! Choose where to place the current slide, speaker notes and controls, or disable them at all!
 8. Light and dark theme included. Sometimes you just don't want to make your listeners blind.
 
-![Dark theme](/screenshots/dark.png?raw=true "Dark theme")
-![Light theme](/screenshots/light.png?raw=true "Light theme")
-![Settings](/screenshots/settings.png?raw=true "Settings panel")
-
 ## Usage
 The installation process includes two simple steps:
 
@@ -36,3 +32,13 @@ The installation process includes two simple steps:
         ```
         Then open your presentation and press `r` to connect to the remote control panel.
 3. Tapping on the gear in the header opens the configuration panel, where you can switch theme and rearrange or disable control panel blocks.
+
+## Screenshots
+### Dark theme
+![Dark theme](/screenshots/dark.png?raw=true "Dark theme")
+
+### Light theme
+![Light theme](/screenshots/light.png?raw=true "Light theme")
+
+### Settings
+![Settings](/screenshots/settings.png?raw=true "Settings panel")
