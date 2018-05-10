@@ -3,6 +3,9 @@ import { Header } from './components/Header'
 import { Blocks } from './components/Blocks'
 import { ThemeProvider } from './components/ThemeProvider'
 
+import {polyfill} from 'mobile-drag-drop'
+polyfill()
+
 import './index.css'
 
 render(

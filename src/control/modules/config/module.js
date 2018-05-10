@@ -4,36 +4,20 @@ import { combineReducers } from 'redux'
 const changeTheme = createEvent('Config: change theme')
 const themeReducer = createReducer('dark').on(changeTheme, (_, theme) => theme)
 
-const changeBlock = createEvent('Config: change block', (id, value) => ({
-  id,
-  value
-}))
+const changeBlock = createEvent('Config: change block')
 const blocksReducer = createReducer({
-  blockA: 'presentation',
-  blockB: 'notes',
-  blockC: 'controls'
-}).on(changeBlock, (blocks, { id, value }) => {
-  const currentValue = blocks[id]
-  const result = Object.assign({}, blocks, {
-    [id]: value
-  })
+  presentation: -1,
+  notes: 0,
+  controls: 1
+}).on(changeBlock, (blocks, newBlocks) => {
+  const keys = Object.keys(newBlocks)
+  const changedFields = keys.filter((field) => blocks[field] !== newBlocks[field])
 
-  if (value === 'disabled') {
-    return result
-  }
-
-  const otherValues = Object.keys(blocks).filter((key) => key !== id)
-  const sameBlock = otherValues.find((key) => blocks[key] === value)
-
-  if (sameBlock) {
-    result[sameBlock] = currentValue
-  }
-
-  return result
+  return changedFields.length !== 0 ? Object.assign({}, blocks, newBlocks) : blocks
 })
 
 const toggleDialog = createEvent('Config: toggle config dialog')
-const dialogReducer = createReducer(false).on(toggleDialog, (state) => !state)
+const dialogReducer = createReducer(true).on(toggleDialog, (state) => !state)
 
 const toggleVibration = createEvent('Config: toggle vibration')
 const vibrationReducer = createReducer(true).on(

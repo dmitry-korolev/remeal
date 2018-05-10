@@ -1,5 +1,8 @@
 import { h, Component } from 'preact'
 import styled from 'preact-emotion'
+import { throttle } from '../utils/throttle'
+import { pick } from '../utils/pick'
+import { BlocksOrder } from './BlocksOrder'
 
 const Button = styled.div``
 
@@ -23,7 +26,7 @@ const Dialog = styled.dialog`
 const DialogClose = styled.span`
   position: absolute;
   top: 1em;
-  right: 2em;
+  right: 1em;
 `
 
 export class SettingsDialog extends Component {
@@ -31,38 +34,15 @@ export class SettingsDialog extends Component {
     this.props.onThemeChange(event.target.value)
   }
 
-  handleBlockChange = (event) => {
-    this.props.onBlockChange(event.target.name, event.target.value)
-  }
-
-  renderBlock(blockId) {
-    const block = this.props.blocks[blockId]
-
-    return (
-      <select id={blockId} name={blockId} onChange={this.handleBlockChange}>
-        <option value="disabled" selected={block === 'disabled'}>
-          Disabled
-        </option>
-        <option value="presentation" selected={block === 'presentation'}>
-          Presentation frame
-        </option>
-        <option value="notes" selected={block === 'notes'}>
-          Speaker notes
-        </option>
-        <option value="controls" selected={block === 'controls'}>
-          Controls
-        </option>
-      </select>
-    )
-  }
-
   render({
+    blocks,
     dialogOpened,
     vibration,
     theme,
     onOpenClick,
     onCloseClick,
-    onVibrationChange
+    onVibrationChange,
+    onBlockChange
   }) {
     return (
       <div>
@@ -99,18 +79,9 @@ export class SettingsDialog extends Component {
             </p>
 
             <p>
-              <label htmlFor="blockA">Block A:</label>{' '}
-              {this.renderBlock('blockA')}
-            </p>
+              Order:<br/>
 
-            <p>
-              <label htmlFor="blockB">Block B:</label>{' '}
-              {this.renderBlock('blockB')}
-            </p>
-
-            <p>
-              <label htmlFor="blockC">Block C:</label>{' '}
-              {this.renderBlock('blockC')}
+              <BlocksOrder blocks={blocks} onBlockChange={onBlockChange} />
             </p>
           </form>
         </Dialog>

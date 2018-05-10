@@ -8,6 +8,8 @@ import { Controls } from './Controls'
 import { Bookmarklet } from './Bookmarklet'
 
 const BlocksContainer = styled.div`
+  display:flex;
+  flex-direction: column;
   height: var(--blocks-height);
 
   & > * {
@@ -16,6 +18,12 @@ const BlocksContainer = styled.div`
     overflow: scroll;
     height: calc(var(--blocks-height) / ${(props) => props.children.length});
   }
+`
+
+const BlockContainer = styled.div`
+  order: ${props => props.order};
+  flex-grow: 1;
+  display: ${props => props.order < 0 ? 'none' : 'block'};
 `
 
 const pickStateSelector = createStructuredSelector({
@@ -44,9 +52,7 @@ const notesSelector = createSelector(
 
 const blocksSelector = createSelector(
   (state) => state.config.blocks,
-  (blocks) => ({
-    blocks: Object.values(blocks).filter((value) => value !== 'disabled')
-  })
+  (blocks) => ({ blocks })
 )
 
 const connectedSelector = createSelector(
@@ -59,41 +65,43 @@ export class Blocks extends Component {
     return <Bookmarklet url={document.location.origin} />
   }
 
-  renderNotes() {
+  renderNotes(index) {
     return (
       <Consumer mapState={notesSelector}>
         {({ notes }) => (
-          <div>
+          <BlockContainer order={index}>
             <SpeakerNotes notes={notes} />
-          </div>
+          </BlockContainer>
         )}
       </Consumer>
     )
   }
 
-  renderFrame() {
+  renderFrame(index) {
     return (
       <Consumer mapState={presentationSelector}>
         {({ url, state }) => (
-          <div>
+          <BlockContainer order={index}>
             <PresentationFrame state={state} url={url} />
-          </div>
+          </BlockContainer>
         )}
       </Consumer>
     )
   }
 
-  renderControls() {
+  renderControls(index) {
     return (
       <Consumer mapState={pausedSelector}>
         {({ paused, controls }) => (
-          <Controls
-            onPrevClick={controls.prev}
-            onNextClick={controls.next}
-            onOverviewClick={controls.overview}
-            onPauseClick={controls.pause}
-            paused={paused}
-          />
+          <BlockContainer order={index}>
+            <Controls
+              onPrevClick={controls.prev}
+              onNextClick={controls.next}
+              onOverviewClick={controls.overview}
+              onPauseClick={controls.pause}
+              paused={paused}
+            />
+          </BlockContainer>
         )}
       </Consumer>
     )
@@ -104,11 +112,9 @@ export class Blocks extends Component {
       <Consumer mapState={blocksSelector}>
         {({ blocks }) => (
           <BlocksContainer>
-            {blocks.map((block) => {
-              if (block === 'notes') return this.renderNotes()
-              if (block === 'presentation') return this.renderFrame()
-              if (block === 'controls') return this.renderControls()
-            })}
+            { this.renderFrame(blocks['presentation']) }
+            { this.renderNotes(blocks['notes']) }
+            { this.renderControls(blocks['controls']) }
           </BlocksContainer>
         )}
       </Consumer>
@@ -117,13 +123,11 @@ export class Blocks extends Component {
 
   render() {
     return (
-      <div>
-        <Consumer mapState={connectedSelector}>
-          {({ connected }) =>
-            connected ? this.renderBlocks() : this.renderBookmarklet()
-          }
-        </Consumer>
-      </div>
+      <Consumer mapState={connectedSelector}>
+        {({ connected }) =>
+          connected ? this.renderBlocks() : this.renderBookmarklet()
+        }
+      </Consumer>
     )
   }
 }

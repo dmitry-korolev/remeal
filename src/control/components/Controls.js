@@ -19,6 +19,7 @@ const Container = styled.div`
   display: flex;
   align-content: stretch;
   align-items: stretch;
+  height: 100%;
 `
 
 const Button = styled.div`
