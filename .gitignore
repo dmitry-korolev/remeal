@@ -1,6 +1,7 @@
 /node_modules
 .idea
 .cache
+.DS_Store
 
 # generated files
 /public

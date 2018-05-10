@@ -4,6 +4,8 @@ import {
   tap,
   take,
   takeUntil,
+  sample,
+  filter,
   switchMap,
   distinctUntilChanged
 } from 'rxjs/operators'
@@ -54,6 +56,14 @@ const onChange = () =>
         })
       )
     )
+  )
+
+const vibrateEpic = (_, state$) =>
+  state$.pipe(
+    sample(setState$),
+    filter((state) => state.config.vibration),
+    tap(() => navigator.vibrate(250)),
+    mapTo(null)
   )
 
 const startPending = createEvent('Presentation: start pending')
@@ -110,7 +120,8 @@ export const presentationState = {
     onChange,
     onCommandEpic,
     pendingEpic,
-    onPauseEpic
+    onPauseEpic,
+    vibrateEpic
   ]),
   state: {
     presentation: presentationStateReducer

@@ -44,7 +44,7 @@ export const Header = () => {
       <Consumer mapState={totalSelector}>
         {({ current, total }) => (
           <div>
-            {current}/{total}
+            {current || 0}/{total || 0}
           </div>
         )}
       </Consumer>
@@ -68,18 +68,22 @@ export const Header = () => {
           theme,
           blocks,
           dialogOpened,
+          vibration,
           toggleDialog,
           changeTheme,
-          changeBlock
+          changeBlock,
+          toggleVibration
         }) => (
           <SettingsDialog
             theme={theme}
             blocks={blocks}
             dialogOpened={dialogOpened}
+            vibration={vibration}
             onOpenClick={toggleDialog}
             onCloseClick={toggleDialog}
             onThemeChange={changeTheme}
             onBlockChange={changeBlock}
+            onVibrationChange={toggleVibration}
           />
         )}
       </Consumer>

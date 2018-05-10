@@ -51,7 +51,7 @@ const blocksSelector = createSelector(
 
 const connectedSelector = createSelector(
   (state) => state.presentation.status,
-  (status) => ({ connected: status !== 'disconnected ' })
+  (status) => ({ connected: status !== 'disconnected' })
 )
 
 export class Blocks extends Component {

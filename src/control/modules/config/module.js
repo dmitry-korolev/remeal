@@ -35,18 +35,26 @@ const blocksReducer = createReducer({
 const toggleDialog = createEvent('Config: toggle config dialog')
 const dialogReducer = createReducer(false).on(toggleDialog, (state) => !state)
 
+const toggleVibration = createEvent('Config: toggle vibration')
+const vibrationReducer = createReducer(true).on(
+  toggleVibration,
+  (state) => !state
+)
+
 export const config = () => ({
   name: 'Config',
   api: {
     changeTheme,
     changeBlock,
-    toggleDialog
+    toggleDialog,
+    toggleVibration
   },
   state: {
     config: combineReducers({
       theme: themeReducer,
       blocks: blocksReducer,
-      dialogOpened: dialogReducer
+      dialogOpened: dialogReducer,
+      vibration: vibrationReducer
     })
   }
 })

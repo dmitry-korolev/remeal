@@ -1,6 +1,5 @@
 import { h } from 'preact'
 import styled from 'preact-emotion'
-
 ;`
 
 .button.prev, .button.pause, .button.overview {

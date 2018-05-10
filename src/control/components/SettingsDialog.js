@@ -39,7 +39,7 @@ export class SettingsDialog extends Component {
     const block = this.props.blocks[blockId]
 
     return (
-      <select name={blockId} onChange={this.handleBlockChange}>
+      <select id={blockId} name={blockId} onChange={this.handleBlockChange}>
         <option value="disabled" selected={block === 'disabled'}>
           Disabled
         </option>
@@ -56,7 +56,14 @@ export class SettingsDialog extends Component {
     )
   }
 
-  render({ dialogOpened, theme, onOpenClick, onCloseClick }) {
+  render({
+    dialogOpened,
+    vibration,
+    theme,
+    onOpenClick,
+    onCloseClick,
+    onVibrationChange
+  }) {
     return (
       <div>
         <Button onClick={onOpenClick}>
@@ -70,8 +77,8 @@ export class SettingsDialog extends Component {
 
           <form id="form">
             <p>
-              Theme:{' '}
-              <select name="theme" onChange={this.handleThemeChange}>
+              <label htmlFor="theme">Theme:</label>{' '}
+              <select id="theme" name="theme" onChange={this.handleThemeChange}>
                 <option value="dark" selected={theme === 'dark'}>
                   Dark
                 </option>
@@ -81,11 +88,30 @@ export class SettingsDialog extends Component {
               </select>
             </p>
 
-            <p>Block A: {this.renderBlock('blockA')}</p>
+            <p>
+              <label htmlFor="vibration">Vibrations:</label>{' '}
+              <input
+                type="checkbox"
+                id="vibration"
+                checked={vibration}
+                onChange={onVibrationChange}
+              />
+            </p>
 
-            <p>Block B: {this.renderBlock('blockB')}</p>
+            <p>
+              <label htmlFor="blockA">Block A:</label>{' '}
+              {this.renderBlock('blockA')}
+            </p>
 
-            <p>Block C: {this.renderBlock('blockC')}</p>
+            <p>
+              <label htmlFor="blockB">Block B:</label>{' '}
+              {this.renderBlock('blockB')}
+            </p>
+
+            <p>
+              <label htmlFor="blockC">Block C:</label>{' '}
+              {this.renderBlock('blockC')}
+            </p>
           </form>
         </Dialog>
       </div>
