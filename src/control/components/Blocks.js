@@ -56,7 +56,7 @@ const connectedSelector = createSelector(
 
 export class Blocks extends Component {
   renderBookmarklet() {
-    return <Bookmarklet src={document.location.origin} />
+    return <Bookmarklet url={document.location.origin} />
   }
 
   renderNotes() {
