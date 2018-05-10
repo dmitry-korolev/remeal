@@ -13,6 +13,7 @@ Simple remote control panel for reveal.js presentations based on socket.io. Feat
     4. toggle overview mode
 7. Customizable panel! Choose where to place the current slide, speaker notes and controls, or disable them at all!
 8. Light and dark theme included. Sometimes you just don't want to make your listeners blind.
+9. Control panel vibrates on receiving events from the presentation so that you don't have to look back on the main screen to be sure that everything works (can be disabled).
 
 ## Usage
 The installation process includes two simple steps:
