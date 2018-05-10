@@ -1,5 +1,5 @@
 import { h, render } from 'preact'
-import { Header } from './components/header'
+import { Header } from './components/Header'
 import { Blocks } from './components/Blocks'
 import { ThemeProvider } from './components/ThemeProvider'
 
