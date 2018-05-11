@@ -1,4 +1,4 @@
-import { h, Component } from 'preact'
+import { h, Component } from 'preact' // eslint-disable-line no-unused-vars
 import styled from 'preact-emotion'
 import { createSelector, createStructuredSelector } from 'reselect'
 import { SpeakerNotes } from './SpeakerNotes'
@@ -8,7 +8,7 @@ import { Controls } from './Controls'
 import { Bookmarklet } from './Bookmarklet'
 
 const BlocksContainer = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
   height: var(--blocks-height);
 
@@ -21,9 +21,9 @@ const BlocksContainer = styled.div`
 `
 
 const BlockContainer = styled.div`
-  order: ${props => props.order};
+  order: ${(props) => props.order};
   flex-grow: 1;
-  display: ${props => props.order < 0 ? 'none' : 'block'};
+  display: ${(props) => (props.order < 0 ? 'none' : 'block')};
 `
 
 const pickStateSelector = createStructuredSelector({
@@ -112,9 +112,9 @@ export class Blocks extends Component {
       <Consumer mapState={blocksSelector}>
         {({ blocks }) => (
           <BlocksContainer>
-            { this.renderFrame(blocks['presentation']) }
-            { this.renderNotes(blocks['notes']) }
-            { this.renderControls(blocks['controls']) }
+            {this.renderFrame(blocks['presentation'])}
+            {this.renderNotes(blocks['notes'])}
+            {this.renderControls(blocks['controls'])}
           </BlocksContainer>
         )}
       </Consumer>

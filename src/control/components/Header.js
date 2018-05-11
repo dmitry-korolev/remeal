@@ -56,8 +56,7 @@ export const Header = () => {
             api.sw.stop()
             api.sw.start()
           }
-        })}
-      >
+        })}>
         {({ seconds, restart }) => (
           <StopWatch seconds={seconds} onClick={restart} />
         )}

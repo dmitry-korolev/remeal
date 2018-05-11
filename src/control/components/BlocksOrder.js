@@ -11,24 +11,24 @@ const DragContainer = styled.div`
 const DropArea = styled.div`
   height: calc(9em + 2px);
   width: calc(50% - 0.2em + 2px);
-  border: 1px dashed #1F7A8C;
+  border: 1px dashed #1f7a8c;
 `
 
 const DeleteArea = styled(DropArea)`
   position: relative;
-  
+
   ::after {
     content: 'delete';
     font-weight: bold;
     font-size: 3em;
-    font-family: 'Material Icons';    
+    font-family: 'Material Icons';
     opacity: 0.3;
 
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
     z-index: -1;
   }
 `
@@ -37,7 +37,7 @@ const DraggableItem = styled.div`
   height: 3em;
   line-height: calc(3em - 2px);
   text-align: center;
-  border: 1px solid #1F7A8C;
+  border: 1px solid #1f7a8c;
 `
 
 const swap = (arr, a, b) => {
@@ -52,20 +52,23 @@ const swap = (arr, a, b) => {
 }
 
 const sortedBlocksSelector = createSelector(
-  blocks => blocks,
-  blocks => Object.entries(blocks)
-    .map(([blockName, blockOrder]) => ({ blockName, blockOrder }))
-    .sort((a, b) => a.blockOrder - b.blockOrder)
+  (blocks) => blocks,
+  (blocks) =>
+    Object.entries(blocks)
+      .map(([blockName, blockOrder]) => ({ blockName, blockOrder }))
+      .sort((a, b) => a.blockOrder - b.blockOrder)
 )
 
-const enabledBlocksSelector = createSelector(
-  sortedBlocksSelector,
-  blocks => blocks.filter(({ blockOrder }) => blockOrder >= 0).map(({ blockName }) => blockName)
+const enabledBlocksSelector = createSelector(sortedBlocksSelector, (blocks) =>
+  blocks
+    .filter(({ blockOrder }) => blockOrder >= 0)
+    .map(({ blockName }) => blockName)
 )
 
-const disabledBlocksSelector = createSelector(
-  sortedBlocksSelector,
-  blocks => blocks.filter(({ blockOrder }) => blockOrder < 0).map(({ blockName }) => blockName)
+const disabledBlocksSelector = createSelector(sortedBlocksSelector, (blocks) =>
+  blocks
+    .filter(({ blockOrder }) => blockOrder < 0)
+    .map(({ blockName }) => blockName)
 )
 
 const blocksSelector = createStructuredSelector({
@@ -73,12 +76,13 @@ const blocksSelector = createStructuredSelector({
   disabled: disabledBlocksSelector
 })
 
-const getElType = id => id < 0 ? 'disabled' : 'enabled'
+const getElType = (id) => (id < 0 ? 'disabled' : 'enabled')
 
-const processElements = (elements, type) => elements.reduce((result, item, index) => {
-  result[item] = type === 'enabled' ? (index) : (index - elements.length)
-  return result
-}, {})
+const processElements = (elements, type) =>
+  elements.reduce((result, item, index) => {
+    result[item] = type === 'enabled' ? index : index - elements.length
+    return result
+  }, {})
 
 export class BlocksOrder extends Component {
   handleDragStart = (event) => {
@@ -98,7 +102,8 @@ export class BlocksOrder extends Component {
     const draggedType = this.draggedType
     const { blocks } = this.props
     const types = blocksSelector(blocks)
-    const targetType = targetId in blocks ? getElType(blocks[targetId]) : targetId
+    const targetType =
+      targetId in blocks ? getElType(blocks[targetId]) : targetId
 
     // Ignore if dragged element is a target
     if (draggedId === targetId) {
@@ -119,7 +124,7 @@ export class BlocksOrder extends Component {
     // remove it from oid type and add to the new type
     if (draggedType !== targetType) {
       this.draggedType = targetType
-      types[draggedType] = types[draggedType].filter(id => id !== draggedId)
+      types[draggedType] = types[draggedType].filter((id) => id !== draggedId)
       types[targetType] = types[targetType].concat(draggedId)
     }
 
@@ -128,48 +133,43 @@ export class BlocksOrder extends Component {
       types[targetType] = swap(types[targetType], draggedId, targetId)
     }
 
-    console.log(draggedId, targetId)
-    console.log(types[draggedType].slice(), types[targetType].slice())
-
-    this.props.onBlockChange(Object.assign(
-      {},
-      processElements(types[draggedType], draggedType),
-      processElements(types[targetType], targetType)
-    ))
+    this.props.onBlockChange(
+      Object.assign(
+        {},
+        processElements(types[draggedType], draggedType),
+        processElements(types[targetType], targetType)
+      )
+    )
   })
 
-  render ({ blocks }) {
+  render({ blocks }) {
     const { enabled, disabled } = blocksSelector(this.props.blocks)
 
-    return <DragContainer>
-      <DropArea
-        id='enabled'
-        onDragStart={this.handleDragStart}
-        onDragOver={this.handleDrag}
-        onDragEnter={this.handleDragEnter}
-      >
-        {
-          enabled.map((blockName) => <DraggableItem
-            draggable={true}
-            key={blockName}
-            id={blockName}
-          >{ blockName }</DraggableItem>)
-        }
-      </DropArea>
-      <DeleteArea
-        id='disabled'
-        onDragStart={this.handleDragStart}
-        onDragOver={this.handleDrag}
-        onDragEnter={this.handleDragEnter}
-      >
-        {
-          disabled.map((blockName) => <DraggableItem
-            draggable={true}
-            key={blockName}
-            id={blockName}
-          >{ blockName }</DraggableItem>)
-        }
-      </DeleteArea>
-    </DragContainer>
+    return (
+      <DragContainer>
+        <DropArea
+          id="enabled"
+          onDragStart={this.handleDragStart}
+          onDragOver={this.handleDrag}
+          onDragEnter={this.handleDragEnter}>
+          {enabled.map((blockName) => (
+            <DraggableItem draggable={true} key={blockName} id={blockName}>
+              {blockName}
+            </DraggableItem>
+          ))}
+        </DropArea>
+        <DeleteArea
+          id="disabled"
+          onDragStart={this.handleDragStart}
+          onDragOver={this.handleDrag}
+          onDragEnter={this.handleDragEnter}>
+          {disabled.map((blockName) => (
+            <DraggableItem draggable={true} key={blockName} id={blockName}>
+              {blockName}
+            </DraggableItem>
+          ))}
+        </DeleteArea>
+      </DragContainer>
+    )
   }
 }

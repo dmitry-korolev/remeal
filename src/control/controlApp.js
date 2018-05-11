@@ -10,7 +10,7 @@ const app = createApp({
   modules: [
     persist({
       key: 'remeal',
-      storage: toAsync(localStorage),
+      storage: toAsync(window.localStorage),
       whiteList: ['config']
     }),
     presentationState,

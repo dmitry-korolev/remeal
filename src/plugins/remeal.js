@@ -1,3 +1,5 @@
+/* global Reveal, io */
+
 import {
   CONNECT_EVENT,
   INIT_EVENT,
@@ -42,7 +44,7 @@ const load = (url) => {
     return
   }
 
-  url = url || prompt('Enter socket.io server url')
+  url = url || window.prompt('Enter socket.io server url')
 
   if (!url) {
     return

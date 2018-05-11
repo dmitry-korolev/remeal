@@ -1,7 +1,5 @@
 import { h, Component } from 'preact'
 import styled from 'preact-emotion'
-import { throttle } from '../utils/throttle'
-import { pick } from '../utils/pick'
 import { BlocksOrder } from './BlocksOrder'
 
 const Button = styled.div``
@@ -79,8 +77,7 @@ export class SettingsDialog extends Component {
             </p>
 
             <p>
-              Order:<br/>
-
+              Order:<br />
               <BlocksOrder blocks={blocks} onBlockChange={onBlockChange} />
             </p>
           </form>

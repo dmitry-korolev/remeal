@@ -34,7 +34,7 @@ export class PresentationFrame extends Component {
     )
   }
 
-  componentWillReceiveProps({ state }) {
+  componentDidUpdate({ state }) {
     this.sendState(state)
   }
 

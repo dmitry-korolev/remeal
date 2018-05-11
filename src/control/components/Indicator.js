@@ -16,7 +16,9 @@ const IndicatorDot = styled.span`
   background-color: ${({ status }) =>
     status === 'connected'
       ? '#0f0'
-      : status === 'disconnected' ? '#f00' : '#ff0'};
+      : status === 'disconnected'
+        ? '#f00'
+        : '#ff0'};
 `
 
 export const Indicator = ({ status }) => (

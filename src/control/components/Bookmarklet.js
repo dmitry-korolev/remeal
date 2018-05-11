@@ -22,8 +22,7 @@ export const Bookmarklet = ({ url }) => (
     <a
       className="bookmarklet"
       title="Remeal bookmarklet"
-      href={bookmarkletUrl(url)}
-    >
+      href={bookmarkletUrl(url)}>
       Remeal
     </a>
   </Container>

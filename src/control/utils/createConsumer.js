@@ -21,11 +21,11 @@ export const createConsumer = (app) => {
   }
 
   return (consumers[app.name] = class Consumer extends Component {
-    componentWillMount() {
+    componentDidMount() {
       this.subscribe(this.props)
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(nextProps) {
       if (
         this.props.mapState !== nextProps.mapState ||
         this.props.mapApi !== nextProps.mapApi ||

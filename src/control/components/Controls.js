@@ -1,19 +1,5 @@
 import { h } from 'preact'
 import styled from 'preact-emotion'
-;`
-
-.button.prev, .button.pause, .button.overview {
-    --height: calc(var(--buttons-height) / 3);
-    height: var(--height);
-    line-height: var(--height);
-}
-
-.button.next {
-    height: var(--buttons-height);
-    line-height: var(--buttons-height);
-}
-
-`
 
 const Container = styled.div`
   display: flex;

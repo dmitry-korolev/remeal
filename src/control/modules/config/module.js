@@ -11,9 +11,13 @@ const blocksReducer = createReducer({
   controls: 1
 }).on(changeBlock, (blocks, newBlocks) => {
   const keys = Object.keys(newBlocks)
-  const changedFields = keys.filter((field) => blocks[field] !== newBlocks[field])
+  const changedFields = keys.filter(
+    (field) => blocks[field] !== newBlocks[field]
+  )
 
-  return changedFields.length !== 0 ? Object.assign({}, blocks, newBlocks) : blocks
+  return changedFields.length !== 0
+    ? Object.assign({}, blocks, newBlocks)
+    : blocks
 })
 
 const toggleDialog = createEvent('Config: toggle config dialog')

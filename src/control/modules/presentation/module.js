@@ -11,20 +11,15 @@ import {
 } from 'rxjs/operators'
 import { merge, timer } from 'rxjs/observable'
 import { createEvent, createReducer, combineEpics, select } from 'stapp'
-import {
-  init$,
-  presentationDisconnect$,
-  sendCommand,
-  setState$
-} from './connection'
+import { init$, presentationDisconnect$, setState$ } from './events'
 import { pauseTimer, startTimer } from '../stopWatch/module'
 import {
   NEXT_EVENT,
   OVERVIEW_EVENT,
   PAUSE_EVENT,
-  PREV_EVENT,
-  REQUEST_RECONNECT_EVENT
+  PREV_EVENT
 } from '../../../constants'
+import { sendCommand } from '../../services/socket'
 
 const setState = createEvent('Presentation: set state')
 const presentationStateReducer = createReducer({
