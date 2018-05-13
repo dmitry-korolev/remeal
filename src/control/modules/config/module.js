@@ -6,9 +6,9 @@ const themeReducer = createReducer('dark').on(changeTheme, (_, theme) => theme)
 
 const changeBlock = createEvent('Config: change block')
 const blocksReducer = createReducer({
-  presentation: -1,
-  notes: 0,
-  controls: 1
+  presentation: 0,
+  notes: 1,
+  controls: 2
 }).on(changeBlock, (blocks, newBlocks) => {
   const keys = Object.keys(newBlocks)
   const changedFields = keys.filter(
@@ -21,7 +21,7 @@ const blocksReducer = createReducer({
 })
 
 const toggleDialog = createEvent('Config: toggle config dialog')
-const dialogReducer = createReducer(true).on(toggleDialog, (state) => !state)
+const dialogReducer = createReducer(false).on(toggleDialog, (state) => !state)
 
 const toggleVibration = createEvent('Config: toggle vibration')
 const vibrationReducer = createReducer(true).on(

@@ -1,11 +1,19 @@
 import { h, Component } from 'preact'
 import styled from 'preact-emotion'
 import { parseUrl } from '../utils/parseUrl'
+import { PresentationPointer } from './PresentationPointer'
 
 const Iframe = styled.iframe`
   height: 100%;
   width: 100%;
   border: none;
+`
+
+const Container = styled.div`
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 `
 
 export class PresentationFrame extends Component {
@@ -28,17 +36,23 @@ export class PresentationFrame extends Component {
   }
 
   sendState(state) {
-    this.iframe.postMessage(
-      JSON.stringify({ method: 'setState', args: [state] }),
-      '*'
-    )
+    this.iframe &&
+      this.iframe.postMessage(
+        JSON.stringify({ method: 'setState', args: [state] }),
+        '*'
+      )
   }
 
-  componentDidUpdate({ state }) {
+  componentWillReceiveProps({ state }) {
     this.sendState(state)
   }
 
   render() {
-    return <Iframe innerRef={this.setIframeRef} src={this.props.url} />
+    return (
+      <Container>
+        <Iframe innerRef={this.setIframeRef} src={this.props.url} />
+        <PresentationPointer />
+      </Container>
+    )
   }
 }

@@ -21,7 +21,7 @@ export const createConsumer = (app) => {
   }
 
   return (consumers[app.name] = class Consumer extends Component {
-    componentDidMount() {
+    componentWillMount() {
       this.subscribe(this.props)
     }
 
