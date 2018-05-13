@@ -4,7 +4,7 @@ Simple remote control panel for reveal.js presentations based on socket.io. Feat
 1. Title of the talk. For busy people!
 2. Timer. Click on it to restart.
 3. Beautiful connection indicator. 
-4. Displays the current slide.
+4. Displays the current slide. Tap and hold the slide to turn the pointer on (can be disabled at the customization panel).
 5. Displays speaker notes for the current slide.
 6. Controls available:
     1. next slide
@@ -36,6 +36,7 @@ The installation process includes two simple steps:
     1. Switch theme
     2. Rearrange or disable control panel blocks
     3. Turn vibrations on and off
+    4. Enable and disable the pointer feature.
 
 ## Screenshots
 ### Dark theme
