@@ -36,8 +36,9 @@ const pickStateSelector = createStructuredSelector({
 
 const presentationSelector = createSelector(
   (state) => state.presentation.url,
+  (state) => state.config.pointer,
   pickStateSelector,
-  (url, state) => ({ url, state })
+  (url, enablePointer, state) => ({ url, enablePointer, state })
 )
 
 const pausedSelector = createSelector(
@@ -80,9 +81,9 @@ export class Blocks extends Component {
   renderFrame(index) {
     return (
       <Consumer mapState={presentationSelector}>
-        {({ url, state }) => (
+        {({ url, state, enablePointer }) => (
           <BlockContainer order={index}>
-            <PresentationFrame state={state} url={url} />
+            <PresentationFrame state={state} url={url} enablePointer={enablePointer} />
           </BlockContainer>
         )}
       </Consumer>

@@ -63,26 +63,14 @@ export const Header = () => {
       </Consumer>
 
       <Consumer mapState={(state) => state.config}>
-        {({
-          theme,
-          blocks,
-          dialogOpened,
-          vibration,
-          toggleDialog,
-          changeTheme,
-          changeBlock,
-          toggleVibration
-        }) => (
+        {({ theme, blocks, dialogOpened, vibration, pointer, configApi }) => (
           <SettingsDialog
             theme={theme}
             blocks={blocks}
             dialogOpened={dialogOpened}
             vibration={vibration}
-            onOpenClick={toggleDialog}
-            onCloseClick={toggleDialog}
-            onThemeChange={changeTheme}
-            onBlockChange={changeBlock}
-            onVibrationChange={toggleVibration}
+            pointer={pointer}
+            configApi={configApi}
           />
         )}
       </Consumer>

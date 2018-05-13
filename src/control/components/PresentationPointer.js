@@ -3,6 +3,7 @@ import styled from 'preact-emotion'
 import { timer, merge } from 'rxjs/observable'
 import {
   map,
+  filter,
   mapTo,
   tap,
   switchMap,
@@ -59,9 +60,10 @@ export class PresentationPointer extends Component {
   componentWillMount() {
     this.subscription = merge(
       this.handleStart$.pipe(
+        filter(() => this.props.enablePointer),
         switchMap(() => timer(500).pipe(takeUntil(this.handleStop$))),
         tap(() => sendCommand(POINTER_START_EVENT)),
-        switchMap(() => this.handleMove$),
+        switchMap(() => this.handleMove$.pipe(takeUntil(this.handleStop$))),
         throttleTime(1000 / 60),
         map((event) => {
           event.preventDefault()
@@ -76,6 +78,7 @@ export class PresentationPointer extends Component {
         tap(({ x, y }) => sendCommand(POINTER_MOVE_EVENT, { x, y }))
       ),
       this.handleStop$.pipe(
+        filter(() => this.props.enablePointer),
         tap(() => sendCommand(POINTER_STOP_EVENT)),
         mapTo({ show: false })
       )

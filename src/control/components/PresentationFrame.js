@@ -51,7 +51,7 @@ export class PresentationFrame extends Component {
     return (
       <Container>
         <Iframe innerRef={this.setIframeRef} src={this.props.url} />
-        <PresentationPointer />
+        <PresentationPointer enablePointer={this.props.enablePointer} />
       </Container>
     )
   }

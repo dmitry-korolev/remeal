@@ -29,26 +29,22 @@ const DialogClose = styled.span`
 
 export class SettingsDialog extends Component {
   handleThemeChange = (event) => {
-    this.props.onThemeChange(event.target.value)
+    this.props.configApi.changeTheme(event.target.value)
   }
 
-  render({
-    blocks,
-    dialogOpened,
-    vibration,
-    theme,
-    onOpenClick,
-    onCloseClick,
-    onVibrationChange,
-    onBlockChange
-  }) {
+  handleResetClick = (event) => {
+    event.preventDefault()
+    this.props.configApi.resetConfig()
+  }
+
+  render({ blocks, dialogOpened, vibration, pointer, theme, configApi }) {
     return (
       <div>
-        <Button onClick={onOpenClick}>
+        <Button onClick={configApi.toggleDialog}>
           <i className="mi">settings</i>
         </Button>
         <Dialog open={dialogOpened}>
-          <DialogClose onClick={onCloseClick}>
+          <DialogClose onClick={configApi.toggleDialog}>
             <i className="mi">close</i>
           </DialogClose>
           <h3 bind>Config</h3>
@@ -72,13 +68,30 @@ export class SettingsDialog extends Component {
                 type="checkbox"
                 id="vibration"
                 checked={vibration}
-                onChange={onVibrationChange}
+                onChange={configApi.toggleVibration}
+              />
+            </p>
+
+            <p>
+              <label htmlFor="pointer">Pointer:</label>{' '}
+              <input
+                type="checkbox"
+                id="pointer"
+                checked={pointer}
+                onChange={configApi.togglePointer}
               />
             </p>
 
             <p>
               Order:<br />
-              <BlocksOrder blocks={blocks} onBlockChange={onBlockChange} />
+              <BlocksOrder
+                blocks={blocks}
+                onBlockChange={configApi.changeBlock}
+              />
+            </p>
+
+            <p>
+              <button onClick={this.handleResetClick}>Reset</button>
             </p>
           </form>
         </Dialog>
