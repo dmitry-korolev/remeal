@@ -1,6 +1,10 @@
 /node_modules
 .idea
 .cache
+.DS_Store
+
+# we do have reasons for that
+package-lock.json
 
 # generated files
 /public

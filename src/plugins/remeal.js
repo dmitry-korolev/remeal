@@ -1,9 +1,10 @@
+/* global Reveal, io */
 import {
   CONNECT_EVENT,
   INIT_EVENT,
   NEXT_EVENT,
   OVERVIEW_EVENT,
-  PAUSE_EVENT,
+  PAUSE_EVENT, POINTER_MOVE_EVENT, POINTER_START_EVENT, POINTER_STOP_EVENT,
   PRESENTATION,
   PREV_EVENT,
   REQUEST_RECONNECT_EVENT,
@@ -11,14 +12,28 @@ import {
   SETSTATE_EVENT
 } from '../constants'
 import { loadScript } from '../loadScript'
+import './overlay'
 
 const collectData = () => ({
   title: document.title,
   url: document.location.href,
   notes: Reveal.getSlideNotes(),
   total: Reveal.getTotalSlides(),
-  state: Reveal.getState()
+  state: Reveal.getState(),
+  sizes: {
+    height: window.innerHeight,
+    width: window.innerWidth
+  }
 })
+
+const setupOverlay = (socket) => {
+  const overlay = document.createElement('pointer-overlay')
+  document.body.appendChild(overlay)
+
+  socket.on(POINTER_MOVE_EVENT, ({ x, y }) => overlay.move({ x, y }))
+  socket.on(POINTER_START_EVENT, () => overlay.show())
+  socket.on(POINTER_STOP_EVENT, () => overlay.hide())
+}
 
 const connect = (socket) => {
   socket.on(CONNECT_EVENT, () => socket.emit(INIT_EVENT, collectData()))
@@ -42,20 +57,21 @@ const load = (url) => {
     return
   }
 
-  url = url || prompt('Enter socket.io server url')
+  url = url || window.prompt('Enter socket.io server url')
 
   if (!url) {
     return
   }
 
   loadScript(url + '/socket.io/socket.io.js')
-    .then(() =>
-      connect(
-        io(url, {
-          query: { type: PRESENTATION }
-        })
-      )
-    )
+    .then(() => {
+      const socket = io(url, {
+        query: { type: PRESENTATION }
+      })
+
+      connect(socket)
+      setupOverlay(socket)
+    })
     .catch((error) => console.log(error))
 }
 
