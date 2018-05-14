@@ -1,5 +1,5 @@
 # Remeal
-Simple remote control panel for reveal.js presentations based on socket.io.
+Simple remote control panel for [reveal.js](https://revealjs.com/) presentations based on socket.io.
 
 Features:
 
