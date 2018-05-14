@@ -1,5 +1,7 @@
 # Remeal
-Simple remote control panel for reveal.js presentations based on socket.io. Features:
+Simple remote control panel for reveal.js presentations based on socket.io.
+
+Features:
 
 1. Title of the talk. For busy people!
 2. Timer. Click on it to restart.
@@ -20,8 +22,8 @@ The installation process includes two simple steps:
 
 1. Clone this repo and deploy anywhere. Don't forget to `npm run build&& npm run start` it (hint: `now` will do it automatically).
 2. Connect your presentation to the control panel. There are two ways to do that:
-    1. Visit remeal deployment and drag the huge `Remeal` link to the bookmarks panel. Then open your presentation and press the bookmarklet. The presentation will be connected to the control panel automatically.
-    2. OR build remeal locally (`npm run build`), copy `plugin/remeal.js` to your presentation and add it as a dependency:
+    1. Visit remeal deployment and drag the huge `Remeal` link to the bookmarks panel. Then open your presentation and press the bookmarklet. The presentation will be connected to the control panel automatically. This method is preferable. Obviously.
+    2. OR, if you feel *adventurous*, build remeal locally (`npm run build`), copy `plugin/remeal.js` to your presentation and add it as a dependency:
         ```js
         Reveal.initialize({
           ...otherConfigOptions,
@@ -44,6 +46,12 @@ The installation process includes two simple steps:
 
 ### Light theme
 ![Light theme](/screenshots/light.png?raw=true "Light theme")
+
+## Built with:
+* [preact](https://preactjs.com/) as a view library
+* [stapp](https://www.npmjs.com/package/stapp) as a state management tool
+* [socket.io](https://socket.io/) as an event transport
+* [parcel](https://parceljs.org/) as a bundler with zero configuration
 
 ## License
 MIT
