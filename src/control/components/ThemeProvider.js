@@ -7,14 +7,16 @@ const lightTheme = {
   backgroundColor: '#FCFEFF',
   fontColor: '#022B3A',
   borderColor: '#022B3A',
-  linkColor: '#1F7A8C'
+  linkColor: '#1F7A8C',
+  dialogBackground: 'rgba(255, 255, 255, 0.9)'
 }
 
 const darkTheme = {
   backgroundColor: '#022B3A',
   fontColor: '#CACED1',
   borderColor: '#1F7A8C',
-  linkColor: '#1F7A8C'
+  linkColor: '#1F7A8C',
+  dialogBackground: 'rgba(0, 0, 0, 0.7)'
 }
 
 const themes = {
@@ -28,7 +30,10 @@ const Theme = styled.div`
   --border-color: ${({ theme }) => themes[theme].borderColor};
   --link-color: ${({ theme }) => themes[theme].linkColor};
 
-  font-size: 16px;
+  --dialog-background: ${({ theme }) => themes[theme].dialogBackground};
+  --font-size: 16px;
+
+  font-size: var(--font-size);
   font-family: -apple-system, sans-serif;
   color: var(--font-color);
   background-color: var(--background-color);

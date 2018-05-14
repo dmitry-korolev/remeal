@@ -45,8 +45,5 @@ The installation process includes two simple steps:
 ### Light theme
 ![Light theme](/screenshots/light.png?raw=true "Light theme")
 
-### Settings
-![Settings](/screenshots/settings.png?raw=true "Settings panel")
-
 ## License
 MIT
