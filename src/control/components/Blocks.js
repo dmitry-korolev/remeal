@@ -83,7 +83,11 @@ export class Blocks extends Component {
       <Consumer mapState={presentationSelector}>
         {({ url, state, enablePointer }) => (
           <BlockContainer order={index}>
-            <PresentationFrame state={state} url={url} enablePointer={enablePointer} />
+            <PresentationFrame
+              state={state}
+              url={url}
+              enablePointer={enablePointer}
+            />
           </BlockContainer>
         )}
       </Consumer>
