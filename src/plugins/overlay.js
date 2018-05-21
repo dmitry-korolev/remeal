@@ -1,5 +1,6 @@
 import { Slim } from 'slim-js'
 import { tag, template, useShadow } from 'slim-js/Decorators'
+import { throttle } from '../control/utils/throttle'
 
 const calculateCicle = ({ x, y }) => {
   const height = window.innerHeight
@@ -43,7 +44,7 @@ const calculateCicle = ({ x, y }) => {
   }
 </style>
 <div s:id="container">
-  <svg height=${window.innerHeight} width=${window.innerWidth}>
+  <svg s:id="overlay" height=${window.innerHeight} width=${window.innerWidth}>
     <path s:id="path" />
   </svg>
 </div>
@@ -51,6 +52,8 @@ const calculateCicle = ({ x, y }) => {
 export class Overlay extends Slim {
   onCreated() {
     this.move({ x: 0, y: 0 })
+
+    window.addEventListener('resize', this.updateOverlay)
   }
 
   show() {
@@ -61,7 +64,16 @@ export class Overlay extends Slim {
     this.path.style.opacity = 0
   }
 
+  updateOverlay = throttle(1000 / 30, () => {
+    window.requestAnimationFrame(() => {
+      this.overlay.setAttribute('height', window.innerHeight)
+      this.overlay.setAttribute('width', window.innerWidth)
+    })
+  })
+
   move({ x, y }) {
-    this.path.setAttribute('d', calculateCicle({ x, y }))
+    window.requestAnimationFrame(() => {
+      this.path.setAttribute('d', calculateCicle({ x, y }))
+    })
   }
 }
