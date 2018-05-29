@@ -18,6 +18,7 @@ Features:
 9. Control panel vibrates on receiving events from the presentation so that you don't have to look back on the main screen to be sure that everything works (can be disabled at the customization panel).
 
 Video:
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/aAibnF0HJtY/0.jpg)](https://www.youtube.com/watch?v=aAibnF0HJtY)
 
 ## Usage
