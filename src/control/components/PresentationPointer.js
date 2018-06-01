@@ -3,21 +3,18 @@ import styled from 'preact-emotion'
 import { timer, merge } from 'rxjs/observable'
 import {
   map,
-  filter,
   mapTo,
   tap,
-  switchMap,
   takeUntil,
+  switchMap,
+  switchMapTo,
   throttleTime
 } from 'rxjs/operators'
 import { Subject } from 'rxjs/Subject'
 import { wait } from '../utils/wait'
-import {
-  POINTER_MOVE_EVENT,
-  POINTER_START_EVENT,
-  POINTER_STOP_EVENT
-} from '../../constants'
+import { POINTER_MOVE_EVENT, POINTER_STOP_EVENT } from '../../constants'
 import { sendCommand } from '../services/socket'
+import { calculateCircle } from '../../helpers/calculateCircle'
 
 const Container = styled.div`
   position: absolute;
@@ -40,6 +37,17 @@ const Overlay = styled.path`
   transition: opacity 0.2s ease;
 `
 
+const mapEvent = (event, sizes) => {
+  event.preventDefault()
+  const touches = event.touches[0]
+
+  return {
+    show: true,
+    x: touches.clientX / sizes.width,
+    y: (touches.clientY - sizes.top) / sizes.height
+  }
+}
+
 export class PresentationPointer extends Component {
   state = {
     x: 0,
@@ -58,27 +66,37 @@ export class PresentationPointer extends Component {
   handleMove$ = new Subject()
 
   componentWillMount() {
+    if (!this.props.enablePointer) {
+      return
+    }
+
     this.subscription = merge(
       this.handleStart$.pipe(
-        filter(() => this.props.enablePointer),
-        switchMap(() => timer(500).pipe(takeUntil(this.handleStop$))),
-        tap(() => sendCommand(POINTER_START_EVENT)),
-        switchMap(() => this.handleMove$.pipe(takeUntil(this.handleStop$))),
-        throttleTime(1000 / 60),
-        map((event) => {
-          event.preventDefault()
-          const touches = event.touches[0]
-
-          return {
-            show: true,
-            x: touches.clientX / this.sizes.width,
-            y: (touches.clientY - this.sizes.top) / this.sizes.height
-          }
-        }),
-        tap(({ x, y }) => sendCommand(POINTER_MOVE_EVENT, { x, y }))
+        map((event) => mapEvent(event, this.sizes)),
+        switchMap(({ x, y }) =>
+          timer(500).pipe(
+            tap(({ x, y }) =>
+              sendCommand(POINTER_MOVE_EVENT, {
+                x,
+                y,
+                ratio: this.props.ratio || 0.1
+              })
+            ),
+            switchMapTo(this.handleMove$),
+            throttleTime(1000 / 30),
+            map((event) => mapEvent(event, this.sizes)),
+            tap(({ x, y }) =>
+              sendCommand(POINTER_MOVE_EVENT, {
+                x,
+                y,
+                ratio: this.props.ratio || 0.1
+              })
+            ),
+            takeUntil(this.handleStop$)
+          )
+        )
       ),
       this.handleStop$.pipe(
-        filter(() => this.props.enablePointer),
         tap(() => sendCommand(POINTER_STOP_EVENT)),
         mapTo({ show: false })
       )
@@ -104,10 +122,9 @@ export class PresentationPointer extends Component {
   }
 
   render() {
-    const rx = this.sizes.height / 10
     return (
       <Container
-        onTouchStart={() => this.handleStart$.next()}
+        onTouchStart={(event) => this.handleStart$.next(event)}
         onTouchEnd={() => this.handleStop$.next()}
         onTouchMove={(event) => this.handleMove$.next(event)}
         innerRef={this.setContainerRef}>
@@ -115,19 +132,13 @@ export class PresentationPointer extends Component {
           <Layer>
             <Overlay
               show={this.state.show}
-              d={`
-                    M 0 0
-                        L ${this.sizes.width} 0
-                        L ${this.sizes.width} ${this.sizes.height}
-                        L 0 ${this.sizes.height}
-                    Z
-                    M ${this.sizes.width * this.state.x} ${this.sizes.height *
-                this.state.y}
-                        m -${rx} 0
-                        a ${rx},${rx} 0 1,0 ${rx * 2},0
-                        a ${rx},${rx} 0 1,0 -${rx * 2},0
-                    Z
-                `}
+              d={calculateCircle({
+                width: this.sizes.width,
+                height: this.sizes.height,
+                x: this.state.x,
+                y: this.state.y,
+                ratio: this.props.ratio || 0.1
+              })}
             />
           </Layer>
         }

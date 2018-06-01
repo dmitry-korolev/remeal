@@ -6,7 +6,6 @@ import {
   OVERVIEW_EVENT,
   PAUSE_EVENT,
   POINTER_MOVE_EVENT,
-  POINTER_START_EVENT,
   POINTER_STOP_EVENT,
   PRESENTATION,
   PREV_EVENT,
@@ -33,8 +32,9 @@ const setupOverlay = (socket) => {
   const overlay = document.createElement('pointer-overlay')
   document.body.appendChild(overlay)
 
-  socket.on(POINTER_MOVE_EVENT, ({ x, y }) => overlay.move({ x, y }))
-  socket.on(POINTER_START_EVENT, () => overlay.show())
+  socket.on(POINTER_MOVE_EVENT, ({ x, y, ratio }) =>
+    overlay.move({ x, y, ratio })
+  )
   socket.on(POINTER_STOP_EVENT, () => overlay.hide())
 }
 

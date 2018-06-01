@@ -5,7 +5,7 @@ import { Consumer } from '../controlApp'
 import { StopWatch } from './StopWatch'
 import { Indicator } from './Indicator'
 import { Title } from './Title'
-import { SettingsDialog } from './SettingsDialog'
+import { SettingsDialog } from './SettingsDialog/SettingsDialog'
 
 const Container = styled.header`
   position: relative;
@@ -63,7 +63,15 @@ export const Header = () => {
       </Consumer>
 
       <Consumer mapState={(state) => state.config}>
-        {({ theme, blocks, dialogOpened, vibration, pointer, configApi }) => (
+        {({
+          theme,
+          blocks,
+          dialogOpened,
+          vibration,
+          pointer,
+          configApi,
+          ratio
+        }) => (
           <SettingsDialog
             theme={theme}
             blocks={blocks}
@@ -71,6 +79,7 @@ export const Header = () => {
             vibration={vibration}
             pointer={pointer}
             configApi={configApi}
+            ratio={ratio}
           />
         )}
       </Consumer>

@@ -1,111 +1,9 @@
 import { h, Component } from 'preact'
-import styled from 'preact-emotion'
 import { BlocksOrder } from './BlocksOrder'
-
-const Dialog = styled.dialog`
-  width: calc(100vw - 4em);
-  left: 2em;
-  top: 2em;
-  margin: 0;
-  border-color: var(--border-color);
-  background-color: var(--dialog-background);
-  color: var(--font-color);
-  box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.75);
-  z-index: 999;
-
-  form *:focus {
-    outline: #52796f auto 5px;
-  }
-
-  select {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    border-radius: 0;
-    height: 1.6em;
-    color: var(--font-color);
-    font-size: var(--font-size);
-  }
-`
-
-const DialogClose = styled.span`
-  position: absolute;
-  top: 1em;
-  right: 1em;
-`
-
-const Checkbox = styled.div`
-  user-select: none;
-
-  /* Base for label styling */
-  [type='checkbox'] {
-    position: absolute;
-    left: -9999px;
-  }
-
-  label {
-    position: relative;
-    padding-right: 2em;
-    cursor: pointer;
-  }
-
-  /* checkbox aspect */
-  label:before {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 1.2em;
-    height: 1.2em;
-
-    border: 1px solid var(--border-color);
-    background: transparent;
-  }
-
-  /* checked mark aspect */
-  label:after {
-    content: '';
-    position: absolute;
-    top: calc(0.1em + 1px);
-    right: calc(0.35em + 1px);
-    width: 5px;
-    height: 10px;
-    border: solid transparent;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
-  }
-
-  /* checked mark aspect changes */
-  [type='checkbox']:checked + label:after {
-    border-color: var(--border-color);
-  }
-
-  [type='checkbox']:focus + label:before {
-    outline: #52796f auto 5px;
-  }
-
-  /* hover style just for information */
-  label:hover:before {
-    background: var(--dialog-background);
-  }
-`
-
-const Button = styled.button`
-  display: inline-block;
-  height: 2em;
-  line-height: 2em;
-  background: transparent;
-  color: var(--font-color);
-  font-size: var(--font-size);
-  border: 1px solid var(--border-color);
-
-  &:active {
-    background: var(--dialog-background);
-  }
-
-  &:focus {
-    outline: #52796f auto 5px;
-  }
-`
+import { Checkbox } from './Checkbox'
+import { Dialog, DialogClose } from './Dialog'
+import { Button } from './Button'
+import { Range } from './Range'
 
 export class SettingsDialog extends Component {
   handleThemeChange = (event) => {
@@ -117,7 +15,20 @@ export class SettingsDialog extends Component {
     this.props.configApi.resetConfig()
   }
 
-  render({ blocks, dialogOpened, vibration, pointer, theme, configApi }) {
+  handleRatioChange = (event) => {
+    event.preventDefault()
+    this.props.configApi.changeRatio(+event.target.value)
+  }
+
+  render({
+    blocks,
+    dialogOpened,
+    vibration,
+    pointer,
+    ratio,
+    theme,
+    configApi
+  }) {
     return (
       <div>
         <div onClick={configApi.toggleDialog}>
@@ -170,6 +81,22 @@ export class SettingsDialog extends Component {
                 />
                 <label htmlFor="pointer">Pointer:</label>{' '}
               </Checkbox>
+            </p>
+
+            <p>
+              <label htmlFor="pointerRatio">
+                Pointer size (relative to screen height):
+              </label>
+              <Range>
+                <input
+                  onChange={this.handleRatioChange}
+                  type="range"
+                  value={ratio}
+                  min={0}
+                  max={1}
+                  step={0.1}
+                />
+              </Range>
             </p>
 
             <p>
