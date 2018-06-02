@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import styled from 'preact-emotion'
 import { createStructuredSelector } from 'reselect'
-import { parseUrl } from '../utils/parseUrl'
+import { parseUrl } from '../../helpers/parseUrl'
 import { PresentationPointer } from './PresentationPointer'
 import { Consumer } from '../controlApp'
 

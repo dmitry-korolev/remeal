@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import styled from 'preact-emotion'
 import { createSelector, createStructuredSelector } from 'reselect'
-import { throttle } from '../../utils/throttle'
+import { throttle } from '../../../helpers/throttle'
 
 const DragContainer = styled.div`
   display: flex;

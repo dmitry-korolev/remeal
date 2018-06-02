@@ -1,6 +1,6 @@
 import { Slim } from 'slim-js'
 import { tag, template, useShadow } from 'slim-js/Decorators'
-import { throttle } from '../control/utils/throttle'
+import { throttle } from '../helpers/throttle'
 import { calculateCircle } from '../helpers/calculateCircle'
 
 @tag('pointer-overlay')

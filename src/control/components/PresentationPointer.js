@@ -11,7 +11,7 @@ import {
   throttleTime
 } from 'rxjs/operators'
 import { Subject } from 'rxjs/Subject'
-import { wait } from '../utils/wait'
+import { wait } from '../../helpers/wait'
 import { POINTER_MOVE_EVENT, POINTER_STOP_EVENT } from '../../constants'
 import { sendCommand } from '../services/socket'
 import { calculateCircle } from '../../helpers/calculateCircle'
