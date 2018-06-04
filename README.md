@@ -1,5 +1,5 @@
 # Remeal 
-[![Build Status](https://travis-ci.org/dmitry-korolev/remeal.svg?branch=master)](https://travis-ci.org/dmitry-korolev/remeal) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) 
+[![Build Status](https://travis-ci.org/dmitry-korolev/remeal.svg?branch=master)](https://travis-ci.org/dmitry-korolev/remeal) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![Greenkeeper badge](https://badges.greenkeeper.io/dmitry-korolev/remeal.svg)](https://greenkeeper.io/) 
 [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](http://twitter.com/share?text=Remeal:%20simple%20control%20panel%20for%20HTML%20presentations&url=https://github.com/dmitry-korolev/remeal&hashtags=remeal,revealjs,presentations)
 
 Simple remote control panel for [reveal.js](https://revealjs.com/) presentations based on socket.io.
@@ -22,7 +22,7 @@ Features:
 
 See it in action:
 
-[![Remeal demonstration](https://img.youtube.com/vi/aAibnF0HJtY/0.jpg)](https://www.youtube.com/watch?v=aAibnF0HJtY) [![Greenkeeper badge](https://badges.greenkeeper.io/dmitry-korolev/remeal.svg)](https://greenkeeper.io/)
+[![Remeal demonstration](https://img.youtube.com/vi/aAibnF0HJtY/0.jpg)](https://www.youtube.com/watch?v=aAibnF0HJtY)
 
 ## Usage
 The installation process includes two simple steps:
