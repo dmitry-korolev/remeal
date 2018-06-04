@@ -1,25 +1,7 @@
 import { Slim } from 'slim-js'
 import { tag, template, useShadow } from 'slim-js/Decorators'
-import { throttle } from '../control/utils/throttle'
-
-const calculateCicle = ({ x, y }) => {
-  const height = window.innerHeight
-  const width = window.innerWidth
-  const radius = height / 10
-
-  return `
-    M 0 0
-      L ${width} 0
-      L ${width} ${height}
-      L 0 ${height}
-    Z
-    M ${width * x} ${height * y}
-      m -${radius} 0
-      a ${radius},${radius} 0 1,0 ${radius * 2},0
-      a ${radius},${radius} 0 1,0 -${radius * 2},0
-    Z
-  `
-}
+import { throttle } from '../helpers/throttle'
+import { calculateCircle } from '../helpers/calculateCircle'
 
 @tag('pointer-overlay')
 @useShadow(true)
@@ -43,7 +25,7 @@ const calculateCicle = ({ x, y }) => {
     transition: opacity 0.2s ease;
   }
 </style>
-<div s:id="container">
+<div>
   <svg s:id="overlay" height=${window.innerHeight} width=${window.innerWidth}>
     <path s:id="path" />
   </svg>
@@ -51,13 +33,13 @@ const calculateCicle = ({ x, y }) => {
 `)
 export class Overlay extends Slim {
   onCreated() {
-    this.move({ x: 0, y: 0 })
-
+    this.timeoutId = 0
     window.addEventListener('resize', this.updateOverlay)
   }
 
-  show() {
-    this.path.style.opacity = 1
+  updateTimeout() {
+    clearTimeout(this.timeoutId)
+    this.timeoutId = setTimeout(() => this.hide(), 3000)
   }
 
   hide() {
@@ -71,9 +53,20 @@ export class Overlay extends Slim {
     })
   })
 
-  move({ x, y }) {
+  move({ x, y, ratio }) {
+    this.updateTimeout()
     window.requestAnimationFrame(() => {
-      this.path.setAttribute('d', calculateCicle({ x, y }))
+      this.path.setAttribute(
+        'd',
+        calculateCircle({
+          height: window.innerHeight,
+          width: window.innerWidth,
+          x,
+          y,
+          ratio
+        })
+      )
+      this.path.style.opacity = 1
     })
   }
 }

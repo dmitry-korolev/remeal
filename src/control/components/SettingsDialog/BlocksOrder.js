@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import styled from 'preact-emotion'
-import { throttle } from '../utils/throttle'
 import { createSelector, createStructuredSelector } from 'reselect'
+import { throttle } from '../../../helpers/throttle'
 
 const DragContainer = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const DragContainer = styled.div`
 const DropArea = styled.div`
   height: calc(9em + 2px);
   width: calc(50% - 0.2em + 2px);
-  border: 1px dashed #1f7a8c;
+  border: 1px dashed var(--border-color);
 `
 
 const DeleteArea = styled(DropArea)`
@@ -37,7 +37,7 @@ const DraggableItem = styled.div`
   height: 3em;
   line-height: calc(3em - 2px);
   text-align: center;
-  border: 1px solid #1f7a8c;
+  border: 1px solid var(--border-color);
 `
 
 const swap = (arr, a, b) => {

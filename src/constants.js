@@ -9,7 +9,6 @@ export const NEXT_EVENT = 'next'
 export const PAUSE_EVENT = 'pause'
 export const OVERVIEW_EVENT = 'overview'
 export const REQUEST_RECONNECT_EVENT = 'requestreconnect'
-export const POINTER_START_EVENT = 'pointer_start'
 export const POINTER_STOP_EVENT = 'pointer_stop'
 export const POINTER_MOVE_EVENT = 'pointer_move'
 export const REMOTE_EVENTS = [
@@ -18,7 +17,6 @@ export const REMOTE_EVENTS = [
   PAUSE_EVENT,
   OVERVIEW_EVENT,
   REQUEST_RECONNECT_EVENT,
-  POINTER_START_EVENT,
   POINTER_STOP_EVENT,
   POINTER_MOVE_EVENT
 ]

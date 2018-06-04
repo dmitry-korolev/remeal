@@ -38,12 +38,18 @@ const vibrationReducer = createReducer(true)
   .on(toggleVibration, (state) => !state)
   .reset(resetConfig)
 
+const changeRatio = createEvent('Config: change highlight ratio')
+const ratioReducer = createReducer(0.2)
+  .on(changeRatio, (_, payload) => payload)
+  .reset(resetConfig)
+
 export const config = () => ({
   name: 'Config',
   api: {
     configApi: {
       changeTheme,
       changeBlock,
+      changeRatio,
       toggleDialog,
       toggleVibration,
       togglePointer,
@@ -56,7 +62,8 @@ export const config = () => ({
       blocks: blocksReducer,
       dialogOpened: dialogReducer,
       vibration: vibrationReducer,
-      pointer: pointerReducer
+      pointer: pointerReducer,
+      ratio: ratioReducer
     })
   }
 })

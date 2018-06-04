@@ -1,7 +1,9 @@
 import { h, Component } from 'preact'
 import styled from 'preact-emotion'
-import { parseUrl } from '../utils/parseUrl'
+import { createStructuredSelector } from 'reselect'
+import { parseUrl } from '../../helpers/parseUrl'
 import { PresentationPointer } from './PresentationPointer'
+import { Consumer } from '../controlApp'
 
 const Iframe = styled.iframe`
   height: 100%;
@@ -15,6 +17,11 @@ const Container = styled.div`
   position: relative;
   overflow: hidden;
 `
+
+const pointerSelector = createStructuredSelector({
+  pointer: (state) => state.config.pointer,
+  ratio: (state) => state.config.ratio
+})
 
 export class PresentationFrame extends Component {
   shouldComponentUpdate({ url }) {
@@ -51,7 +58,11 @@ export class PresentationFrame extends Component {
     return (
       <Container>
         <Iframe innerRef={this.setIframeRef} src={this.props.url} />
-        <PresentationPointer enablePointer={this.props.enablePointer} />
+        <Consumer mapState={pointerSelector}>
+          {({ pointer, ratio }) => (
+            <PresentationPointer enablePointer={pointer} ratio={ratio} />
+          )}
+        </Consumer>
       </Container>
     )
   }

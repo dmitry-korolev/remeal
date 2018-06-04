@@ -36,29 +36,8 @@ const pickStateSelector = createStructuredSelector({
 
 const presentationSelector = createSelector(
   (state) => state.presentation.url,
-  (state) => state.config.pointer,
   pickStateSelector,
-  (url, enablePointer, state) => ({ url, enablePointer, state })
-)
-
-const pausedSelector = createSelector(
-  (state) => state.presentation.paused,
-  (paused) => ({ paused })
-)
-
-const notesSelector = createSelector(
-  (state) => state.presentation.notes,
-  (notes) => ({ notes })
-)
-
-const blocksSelector = createSelector(
-  (state) => state.config.blocks,
-  (blocks) => ({ blocks })
-)
-
-const connectedSelector = createSelector(
-  (state) => state.presentation.status,
-  (status) => ({ connected: status !== 'disconnected' })
+  (url, state) => ({ url, state })
 )
 
 export class Blocks extends Component {
@@ -68,8 +47,8 @@ export class Blocks extends Component {
 
   renderNotes(index) {
     return (
-      <Consumer mapState={notesSelector}>
-        {({ notes }) => (
+      <Consumer mapState={(state) => state.presentation.notes}>
+        {(notes) => (
           <BlockContainer order={index}>
             <SpeakerNotes notes={notes} />
           </BlockContainer>
@@ -81,13 +60,9 @@ export class Blocks extends Component {
   renderFrame(index) {
     return (
       <Consumer mapState={presentationSelector}>
-        {({ url, state, enablePointer }) => (
+        {({ url, state }) => (
           <BlockContainer order={index}>
-            <PresentationFrame
-              state={state}
-              url={url}
-              enablePointer={enablePointer}
-            />
+            <PresentationFrame state={state} url={url} />
           </BlockContainer>
         )}
       </Consumer>
@@ -96,8 +71,8 @@ export class Blocks extends Component {
 
   renderControls(index) {
     return (
-      <Consumer mapState={pausedSelector}>
-        {({ paused, controls }) => (
+      <Consumer mapState={(state) => state.presentation.paused}>
+        {(paused, { controls }) => (
           <BlockContainer order={index}>
             <Controls
               onPrevClick={controls.prev}
@@ -114,8 +89,8 @@ export class Blocks extends Component {
 
   renderBlocks() {
     return (
-      <Consumer mapState={blocksSelector}>
-        {({ blocks }) => (
+      <Consumer mapState={(state) => state.config.blocks}>
+        {(blocks) => (
           <BlocksContainer>
             {this.renderFrame(blocks['presentation'])}
             {this.renderNotes(blocks['notes'])}
@@ -128,8 +103,9 @@ export class Blocks extends Component {
 
   render() {
     return (
-      <Consumer mapState={connectedSelector}>
-        {({ connected }) =>
+      <Consumer
+        mapState={(state) => state.presentation.status !== 'disconnected'}>
+        {(connected) =>
           connected ? this.renderBlocks() : this.renderBookmarklet()
         }
       </Consumer>
