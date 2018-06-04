@@ -1,6 +1,6 @@
 # Remeal 
 [![Build Status](https://travis-ci.org/dmitry-korolev/remeal.svg?branch=master)](https://travis-ci.org/dmitry-korolev/remeal) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) 
-[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://github.com/dmitry-korolev/remeal)
+[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](http://twitter.com/share?text=Remeal:%20simple%20control%20panel%20for%20HTML%20presentations&url=https://github.com/dmitry-korolev/remeal&hashtags=remeal,revealjs,presentations)
 
 Simple remote control panel for [reveal.js](https://revealjs.com/) presentations based on socket.io.
 
