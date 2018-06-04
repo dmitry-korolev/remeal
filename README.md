@@ -22,7 +22,7 @@ Features:
 
 See it in action:
 
-[![Remeal demonstration](https://img.youtube.com/vi/aAibnF0HJtY/0.jpg)](https://www.youtube.com/watch?v=aAibnF0HJtY)
+[![Remeal demonstration](https://img.youtube.com/vi/aAibnF0HJtY/0.jpg)](https://www.youtube.com/watch?v=aAibnF0HJtY) [![Greenkeeper badge](https://badges.greenkeeper.io/dmitry-korolev/remeal.svg)](https://greenkeeper.io/)
 
 ## Usage
 The installation process includes two simple steps:
