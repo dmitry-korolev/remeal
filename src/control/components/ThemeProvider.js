@@ -47,13 +47,8 @@ const Theme = styled.div`
   }
 `
 
-const themeSelector = createSelector(
-  (state) => state.config.theme,
-  (theme) => ({ theme })
-)
-
 export const ThemeProvider = ({ children }) => (
-  <Consumer mapState={themeSelector}>
-    {({ theme }) => <Theme theme={theme}>{children}</Theme>}
+  <Consumer mapState={(state) => state.config.theme}>
+    {(theme) => <Theme theme={theme}>{children}</Theme>}
   </Consumer>
 )

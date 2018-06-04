@@ -19,16 +19,6 @@ const Container = styled.header`
   }
 `
 
-const titleSelector = createSelector(
-  (state) => state.presentation.title,
-  (title) => ({ title })
-)
-
-const statusSelector = createSelector(
-  (state) => state.presentation.status,
-  (status) => ({ status })
-)
-
 const totalSelector = createStructuredSelector({
   current: (state) => state.presentation.indexh + 1,
   total: (state) => state.presentation.total
@@ -37,8 +27,8 @@ const totalSelector = createStructuredSelector({
 export const Header = () => {
   return (
     <Container>
-      <Consumer mapState={titleSelector}>
-        {({ title }) => <Title>{title}</Title>}
+      <Consumer mapState={(state) => state.presentation.title}>
+        {(title) => <Title>{title}</Title>}
       </Consumer>
 
       <Consumer mapState={totalSelector}>
@@ -50,28 +40,21 @@ export const Header = () => {
       </Consumer>
 
       <Consumer
-        mergeProps={(state, api) => ({
-          seconds: state.stopWatch,
-          restart: () => {
-            api.sw.stop()
-            api.sw.start()
-          }
-        })}>
-        {({ seconds, restart }) => (
+        mapState={(state) => state.stopWatch}
+        mapApi={(api) => () => {
+          api.sw.stop()
+          api.sw.start()
+        }}>
+        {(seconds, restart) => (
           <StopWatch seconds={seconds} onClick={restart} />
         )}
       </Consumer>
 
       <Consumer mapState={(state) => state.config}>
-        {({
-          theme,
-          blocks,
-          dialogOpened,
-          vibration,
-          pointer,
-          configApi,
-          ratio
-        }) => (
+        {(
+          { theme, blocks, dialogOpened, vibration, pointer, ratio },
+          { configApi }
+        ) => (
           <SettingsDialog
             theme={theme}
             blocks={blocks}
@@ -84,8 +67,8 @@ export const Header = () => {
         )}
       </Consumer>
 
-      <Consumer mapState={statusSelector}>
-        {({ status }) => <Indicator status={status} />}
+      <Consumer mapState={(state) => state.presentation.status}>
+        {(status) => <Indicator status={status} />}
       </Consumer>
     </Container>
   )
