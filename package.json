@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build",
     "build": "npm run build:client && npm run build:plugin && npm run build:server",
     "build:plugin": "rimraf plugin && parcel build src/plugins/remeal.js -d plugin",
     "build:client": "rimraf public && parcel build src/control/index.html -d public",
